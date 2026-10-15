@@ -54,6 +54,20 @@ export default function WhatsAppButton() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.94 }}
     >
+      {/* Subtle luxury pulse ring behind button */}
+      <motion.span
+        className="whatsapp-pulse-ring"
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: "50%",
+          backgroundColor: "rgba(37, 211, 102, 0.35)",
+          zIndex: -1,
+          pointerEvents: "none",
+        }}
+        animate={{ scale: [1, 1.35, 1.45], opacity: [0.7, 0.2, 0] }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+      />
       <img
         src="/assets/whatsapp.png"
         alt="WhatsApp"

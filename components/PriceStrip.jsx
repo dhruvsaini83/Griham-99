@@ -42,12 +42,19 @@ export default function PriceStrip() {
           {TIERS.map((tier, idx) => (
             <motion.button
               key={idx}
-              whileTap={{ scale: 0.95 }}
-              className={`price-pill-btn shrink-0 snap-start min-h-[44px] transition-all duration-200 ${tier.match ? "active" : ""}`}
+              whileTap={{ scale: 0.96 }}
+              className={`price-pill-btn shrink-0 snap-start min-h-[44px] transition-colors duration-200 relative ${tier.match ? "active" : ""}`}
               onClick={() => handlePriceClick(tier.limit, tier.cat)}
             >
-              <span>{tier.label}</span>
-              <span className="pill-tag">{tier.tag}</span>
+              {tier.match && (
+                <motion.div
+                  layoutId="active-price-tier-indicator"
+                  className="active-pill-indicator absolute inset-0 bg-[#073B2A] rounded-full -z-10 shadow-md"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{tier.label}</span>
+              <span className="pill-tag relative z-10">{tier.tag}</span>
             </motion.button>
           ))}
         </div>

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
+import { staggerContainer } from "@/lib/animations";
 import ProductCard from "./ProductCard";
 import Filters from "./Filters";
 
@@ -116,18 +118,24 @@ export default function ProductGrid() {
             </button>
           </div>
         ) : (
-          <div
+          <motion.div
+            layout
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
             className="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-3 sm:px-4 lg:px-8"
             id="productGridContainer"
           >
-            {filteredProducts.map((product, idx) => (
-              <ProductCard
-                key={product.id ?? product.productId ?? product._id}
-                product={product}
-                index={idx}
-              />
-            ))}
-          </div>
+            <AnimatePresence mode="popLayout">
+              {filteredProducts.map((product, idx) => (
+                <ProductCard
+                  key={product.id ?? product.productId ?? product._id}
+                  product={product}
+                  index={idx}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         )}
       </div>
     </section>

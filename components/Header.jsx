@@ -470,9 +470,15 @@ export default function Header() {
                   )}
                 </AnimatePresence>
               </div>
-              <span className="cart-total-text font-black hidden xs:inline sm:inline">
+              <motion.span
+                key={cartSubtotal}
+                initial={{ scale: 0.9, opacity: 0.8 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="cart-total-text font-black hidden xs:inline sm:inline"
+              >
                 ₹{cartSubtotal}
-              </span>
+              </motion.span>
             </motion.button>
           </div>
         </div>

@@ -218,9 +218,14 @@ export default function SplashScreen({ minDuration = 1800 }) {
               />
             </div>
 
-            <span className="text-[11px] font-semibold tracking-wider text-[#C9A24A] uppercase">
+            <motion.span
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+              className="text-[11px] font-semibold tracking-wider text-[#C9A24A] uppercase inline-block"
+            >
               Starting at ₹49 • All-India Delivery
-            </span>
+            </motion.span>
           </div>
         </motion.div>
       )}
