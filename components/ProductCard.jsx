@@ -100,8 +100,8 @@ export default function ProductCard({ product, index = 0 }) {
         <div className="card-action-btns absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
           <motion.button
             whileTap={{ scale: 0.85 }}
-            animate={heartAnim ? { scale: [1, 1.3, 1] } : { scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            animate={heartAnim ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+            transition={{ duration: 0.35, ease: [0.175, 0.885, 0.32, 1.275] }}
             className={`card-icon-btn min-h-[44px] min-w-[44px] rounded-full flex items-center justify-center transition-all ${
               inWishlist ? "in-wishlist text-[#C83214] bg-[#FEEBE8]" : "bg-white/90 text-stone-700 hover:bg-white"
             } shadow-md`}

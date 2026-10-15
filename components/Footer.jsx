@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
@@ -92,49 +93,34 @@ export default function Footer() {
         <div className="footer-top-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Col 1: Brand Info */}
           <div>
-            <div
+            <Link
+              href="/"
+              onClick={() => {
+                setActiveCategory("all");
+                setMaxPrice(499);
+              }}
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
                 gap: "12px",
                 marginBottom: "8px",
+                cursor: "pointer",
               }}
+              aria-label="Griham 99+ Home"
             >
               <div
-                className="brand-emblem-wrap"
-                style={{ width: "40px", height: "40px" }}
+                className="brand-logo-wrap flex items-center justify-center shrink-0"
+                style={{
+                  width: "50px",
+                  height: "50px",
+                }}
               >
-                <svg
-                  className="brand-emblem-svg"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                  style={{ width: "30px", height: "30px" }}
-                >
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="46"
-                    stroke="#C9A24A"
-                    strokeWidth="4"
-                  />
-                  <path
-                    d="M50 16 L22 38 L27 38 L27 76 L73 76 L73 38 L78 38 Z"
-                    fill="none"
-                    stroke="#C9A24A"
-                    strokeWidth="4"
-                  />
-                  <text
-                    x="50"
-                    y="66"
-                    textAnchor="middle"
-                    fontFamily="'Cinzel', serif"
-                    fontSize="14"
-                    fontWeight="900"
-                    fill="#FFFFFF"
-                  >
-                    99+
-                  </text>
-                </svg>
+                <img
+                  src="/assets/logo.svg"
+                  alt="Griham 99+ Logo"
+                  className="brand-logo-gold-glow"
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
               </div>
               <div>
                 <div
@@ -157,20 +143,86 @@ export default function Footer() {
                   GRIHAM 99+ RETAIL
                 </div>
               </div>
-            </div>
+            </Link>
             <p className="footer-brand-desc">
               {language === "hi"
                 ? "भारतीय परिवारों के लिए दैनिक आवश्यकताएं, रसोई का सामान, उत्सव की सजावट और व्यक्तिगत देखभाल — सिर्फ ₹49 से शुरू होने वाले दामों पर।"
                 : "Bringing 99+ varieties of everyday essentials, useful kitchen finds, sacred festive decor and beauty care to Indian homes with prices starting at honest ₹49."}
             </p>
-            <div
-              style={{
-                color: "var(--color-gold-light)",
-                fontSize: "0.82rem",
-                fontWeight: 700,
-              }}
-            >
-              📞 Support: {siteConfig.supportPhone} ({siteConfig.supportHours})
+            <div className="flex flex-col gap-1.5 mt-3 text-xs sm:text-sm">
+              <a
+                href={`tel:${siteConfig.supportPhoneTel || "+919352456169"}`}
+                className="flex items-center gap-2 text-[#E6C875] hover:text-white transition-colors font-bold min-h-[36px]"
+                aria-label={`Call Support ${siteConfig.supportPhone}`}
+              >
+                <span>📞</span>
+                <span>
+                  {siteConfig.supportPhone}{" "}
+                  <span className="text-[11px] font-normal text-stone-400">
+                    ({siteConfig.supportHours})
+                  </span>
+                </span>
+              </a>
+              <a
+                href={`mailto:${siteConfig.supportEmail || "support@griham99.com"}`}
+                className="flex items-center gap-2 text-[#E6C875] hover:text-white transition-colors font-bold min-h-[36px]"
+                aria-label={`Email Support ${siteConfig.supportEmail || "support@griham99.com"}`}
+              >
+                <span>✉️</span>
+                <span>{siteConfig.supportEmail || "support@griham99.com"}</span>
+              </a>
+              <a
+                href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
+                  "Hello Griham 99+, I need support regarding an order / product."
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#25D366] hover:underline font-bold min-h-[36px]"
+                aria-label="Chat on WhatsApp"
+              >
+                <span>💬</span>
+                <span>WhatsApp: +91 93524 56169</span>
+              </a>
+            </div>
+
+            {/* Jaipur Physical Store Address Card */}
+            <div className="mt-4 p-3.5 rounded-xl bg-white/5 border border-[#C9A24A]/30 text-xs text-stone-200">
+              <div className="text-[11px] uppercase tracking-wider text-[#FCE59F] font-bold mb-1 flex items-center gap-1.5">
+                <span>📍</span>
+                <span>{language === "hi" ? "जयपुर रिटेल स्टोर" : "Jaipur Retail Store"}</span>
+              </div>
+              <p className="text-stone-300 leading-relaxed text-[11px] sm:text-xs">
+                {siteConfig.address.fullAddress}
+              </p>
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:gap-3">
+                <a
+                  href={siteConfig.googleMapsSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#E6C875] hover:text-white underline min-h-[30px]"
+                  aria-label="View Griham 99 Store on Google Maps"
+                >
+                  <span>🗺️</span>
+                  <span>{language === "hi" ? "गूगल मैप्स पर देखें" : "View on Google Maps"}</span>
+                </a>
+                <a
+                  href={siteConfig.googleMapsDirectionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-white/90 hover:text-[#FCE59F] underline min-h-[30px]"
+                  aria-label="Get Directions to Griham 99 Store"
+                >
+                  <span>🧭</span>
+                  <span>{language === "hi" ? "रास्ता देखें" : "Directions"} &rarr;</span>
+                </a>
+                <Link
+                  href="/about#store-location"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-300 hover:text-white min-h-[30px]"
+                >
+                  <span>⏰</span>
+                  <span>{siteConfig.storeHours}</span>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -195,7 +247,7 @@ export default function Footer() {
                   className="footer-link"
                   onClick={() => handleCategoryNav("home")}
                 >
-                  Home & Living
+                  Home Essentials & Lights
                 </a>
               </li>
               <li>
@@ -213,7 +265,7 @@ export default function Footer() {
                   className="footer-link"
                   onClick={() => handleCategoryNav("gifts")}
                 >
-                  Gifts & Festive Decor
+                  Gifts & Festive Diyas
                 </a>
               </li>
               <li>
@@ -222,7 +274,16 @@ export default function Footer() {
                   className="footer-link"
                   onClick={() => handleCategoryNav("storage")}
                 >
-                  Storage & Organization
+                  Storage & Jars
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#catalog"
+                  className="footer-link"
+                  onClick={() => handleCategoryNav("toys")}
+                >
+                  Toys & Kids Items
                 </a>
               </li>
               <li>
@@ -231,7 +292,7 @@ export default function Footer() {
                   className="footer-link"
                   onClick={handlePriceUnder99}
                 >
-                  Finds Under ₹99
+                  🔥 Finds Under ₹99 Store
                 </a>
               </li>
             </ul>
@@ -243,6 +304,24 @@ export default function Footer() {
               {language === "hi" ? "ग्राहक सेवा" : "Customer Care"}
             </h4>
             <ul className="footer-links-list">
+              <li>
+                <Link
+                  href="/about"
+                  className="footer-link text-[#E6C875] font-semibold flex items-center gap-1.5"
+                >
+                  <span>📖</span>
+                  <span>{language === "hi" ? "हमारे बारे में (About Us)" : "About Us & Story"}</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about#store-location"
+                  className="footer-link text-[#E6C875] font-semibold flex items-center gap-1.5"
+                >
+                  <span>📍</span>
+                  <span>{language === "hi" ? "जयपुर स्टोर लोकेशन & मैप" : "Jaipur Store & Live Map"}</span>
+                </Link>
+              </li>
               <li>
                 <button
                   type="button"
@@ -261,20 +340,6 @@ export default function Footer() {
                   style={{ textAlign: "left", background: "none", border: "none" }}
                 >
                   Track Your Cart
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() =>
-                    showToast(
-                      "Returns Policy: 7 Days Easy Exchange on damaged/wrong items."
-                    )
-                  }
-                  className="footer-link"
-                  style={{ textAlign: "left", background: "none", border: "none" }}
-                >
-                  Return & Refund Policy
                 </button>
               </li>
               <li>
@@ -418,7 +483,7 @@ export default function Footer() {
         {/* Bottom Strip */}
         <div className="footer-bottom-strip flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-8 border-t border-white/10 text-xs text-stone-400">
           <div>
-            © 2026 गृहम 99+ (Griham 99+ Retail). All Rights Reserved. Indian
+            © {new Date().getFullYear()} गृहम 99+ (Griham 99+ Retail). All Rights Reserved. Indian
             Retail Store.
           </div>
 

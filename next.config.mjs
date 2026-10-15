@@ -56,7 +56,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: blob: https:",
               "connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://wa.me",
-              "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com",
+              "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://www.google.com https://maps.google.com",
             ].join("; "),
           },
         ],

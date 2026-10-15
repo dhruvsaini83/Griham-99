@@ -70,29 +70,13 @@ export default function SplashScreen({ minDuration = 1800 }) {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-[#C9A24A]/40 flex items-center justify-center bg-[#041F18]/60 shadow-[0_0_30px_rgba(201,162,74,0.25)] mb-4"
+              className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center mb-4"
             >
-              <svg
-                width="36"
-                height="36"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-[#C9A24A] filter drop-shadow-[0_2px_8px_rgba(201,162,74,0.5)]"
-              >
-                <circle cx="50" cy="50" r="46" stroke="#C9A24A" strokeWidth="3" />
-                <path
-                  d="M50 20 L26 42 L32 42 L32 76 L68 76 L68 42 L74 42 Z"
-                  stroke="#C9A24A"
-                  strokeWidth="3.5"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M50 44 Q50 32 50 30 Q54 36 50 44"
-                  fill="#E6C875"
-                />
-                <circle cx="50" cy="56" r="4" fill="#C9A24A" />
-              </svg>
+              <img
+                src="/assets/logo.svg"
+                alt="Griham 99+"
+                className="w-full h-full object-contain filter drop-shadow-[0_0_22px_rgba(201,162,74,0.6)] drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
+              />
             </motion.div>
 
             {/* Brand Title */}

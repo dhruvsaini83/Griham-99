@@ -199,6 +199,8 @@ export default function CartDrawer() {
                     onClick={() => {
                       setIsCartOpen(false);
                       setActiveCategory("all");
+                      const el = document.getElementById("catalog");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     {language === "hi" ? "उत्पाद देखें &rarr;" : "Explore Finds &rarr;"}

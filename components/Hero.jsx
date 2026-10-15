@@ -143,7 +143,7 @@ export default function Hero() {
               "Starting at ₹49",
               "Cash on Delivery",
               "Hygienic Packaging",
-              "Easy 7-Day Exchange",
+              "Verified Store Quality",
             ].map((badge, idx) => (
               <motion.div
                 key={idx}

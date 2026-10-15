@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
+import { siteConfig } from "@/lib/config";
 
 const TICKER_MESSAGES = [
   "✨ 99+ Product Varieties across Home, Kitchen & Gifts — Starting at ₹49!",
@@ -194,6 +196,15 @@ export default function Header() {
           </div>
 
           <div className="announcement-tools">
+            <Link
+              href="/about#store-location"
+              className="hidden lg:flex items-center gap-1 text-xs text-[#E6C875] hover:text-white transition-colors font-semibold mr-2"
+              title="Visit our physical retail store in Jaipur, Rajasthan"
+            >
+              <span>📍</span>
+              <span>Jaipur Store</span>
+            </Link>
+
             <button
               className="pincode-btn"
               onClick={() => setIsPincodeOpen(true)}
@@ -259,55 +270,22 @@ export default function Header() {
           </motion.button>
 
           {/* Brand Logo Link (Centered on mobile, left on desktop) */}
-          <a
-            href="#hero"
-            className="brand-logo-link flex items-center gap-1.5 sm:gap-3 flex-1 md:flex-initial justify-center md:justify-start min-w-0"
+          <Link
+            href="/"
+            className="brand-logo-link flex items-center gap-1.5 sm:gap-3 flex-1 md:flex-initial justify-center md:justify-start min-w-0 cursor-pointer"
             aria-label="Griham 99+ Home"
+            onClick={() => {
+              setActiveCategory("all");
+              setMaxPrice(499);
+              setSearchQuery("");
+            }}
           >
-            <div className="brand-emblem-wrap flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10">
-              <svg className="brand-emblem-svg w-full h-full" viewBox="0 0 100 100" fill="none">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="46"
-                  stroke="url(#goldRimGradHeader)"
-                  strokeWidth="3"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="41"
-                  stroke="#E6C875"
-                  strokeWidth="1"
-                  opacity="0.6"
-                />
-                <path
-                  d="M50 16 L22 38 L27 38 L27 76 L73 76 L73 38 L78 38 Z"
-                  fill="none"
-                  stroke="url(#goldRimGradHeader)"
-                  strokeWidth="3.5"
-                  strokeLinejoin="round"
-                />
-                <path d="M50 30 Q50 20 50 18 Q54 24 50 30" fill="#FCE59F" />
-                <circle cx="50" cy="46" r="4.5" fill="url(#goldRimGradHeader)" />
-                <path
-                  d="M43 56 Q50 50 57 56 Q50 63 43 56 Z"
-                  fill="url(#goldRimGradHeader)"
-                />
-                <defs>
-                  <linearGradient
-                    id="goldRimGradHeader"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop offset="0%" stopColor="#F5DF95" />
-                    <stop offset="50%" stopColor="#C9A24A" />
-                    <stop offset="100%" stopColor="#8F6B1E" />
-                  </linearGradient>
-                </defs>
-              </svg>
+            <div className="brand-logo-wrap flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+              <img
+                src="/assets/logo.svg"
+                alt="Griham 99+ Logo"
+                className="w-full h-full object-contain brand-logo-gold-glow"
+              />
             </div>
             <div className="brand-text-block min-w-0">
               <span className="brand-title block text-base sm:text-xl font-black tracking-tight text-white truncate">
@@ -319,7 +297,7 @@ export default function Header() {
                   : "Everyday Retail Store"}
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Search Bar (hidden on mobile, flex on md+) */}
           <div
@@ -566,9 +544,9 @@ export default function Header() {
 
         {/* Quick Category Navigation Strip */}
         <nav className="header-category-nav bg-[#052e21] border-t border-[#C9A24A]/10 py-1.5 overflow-x-auto scrollbar-hide">
-          <div className="container flex items-center gap-2 sm:gap-4 text-xs font-semibold whitespace-nowrap px-4">
+          <div className="container flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap px-3 sm:px-4">
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full transition-colors ${
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
                 activeCategory === "all"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-stone-300 hover:text-white"
@@ -578,7 +556,7 @@ export default function Header() {
               All 99+ Products
             </button>
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full font-bold transition-colors ${
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full font-bold transition-colors ${
                 activeCategory === "under99"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-[#E6C875] hover:text-white"
@@ -588,45 +566,84 @@ export default function Header() {
               🔥 Under ₹99 Store
             </button>
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full transition-colors ${
-                activeCategory === "Kitchen & Dining"
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "kitchen"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-stone-300 hover:text-white"
               }`}
-              onClick={() => handleCategoryNav("Kitchen & Dining")}
+              onClick={() => handleCategoryNav("kitchen")}
             >
               Kitchen & Dining
             </button>
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full transition-colors ${
-                activeCategory === "Home Decor & Festive"
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "home"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-stone-300 hover:text-white"
               }`}
-              onClick={() => handleCategoryNav("Home Decor & Festive")}
+              onClick={() => handleCategoryNav("home")}
             >
-              Festive & Decor
+              Home Essentials
             </button>
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full transition-colors ${
-                activeCategory === "Pooja & Spiritual"
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "beauty"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-stone-300 hover:text-white"
               }`}
-              onClick={() => handleCategoryNav("Pooja & Spiritual")}
+              onClick={() => handleCategoryNav("beauty")}
             >
-              Pooja Essentials
+              Beauty & Care
             </button>
             <button
-              className={`cat-nav-link min-h-[36px] px-2.5 py-1 rounded-full transition-colors ${
-                activeCategory === "Storage & Utility"
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "gifts"
                   ? "bg-[#C9A24A] text-[#073B2A]"
                   : "text-stone-300 hover:text-white"
               }`}
-              onClick={() => handleCategoryNav("Storage & Utility")}
+              onClick={() => handleCategoryNav("gifts")}
             >
-              Storage & Organizer
+              Festive & Gifts
             </button>
+            <button
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "storage"
+                  ? "bg-[#C9A24A] text-[#073B2A]"
+                  : "text-stone-300 hover:text-white"
+              }`}
+              onClick={() => handleCategoryNav("storage")}
+            >
+              Storage & Jars
+            </button>
+            <button
+              className={`cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors ${
+                activeCategory === "toys"
+                  ? "bg-[#C9A24A] text-[#073B2A]"
+                  : "text-stone-300 hover:text-white"
+              }`}
+              onClick={() => handleCategoryNav("toys")}
+            >
+              Toys & Kids
+            </button>
+
+            {/* Subtle Divider */}
+            <div className="h-4 w-px bg-[#C9A24A]/30 mx-1 shrink-0" />
+
+            {/* About & Store Locator Links (In normal inline flow without ml-auto) */}
+            <Link
+              href="/about"
+              className="cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors text-stone-300 hover:text-white flex items-center gap-1 font-semibold hover:bg-white/10"
+            >
+              <span>ℹ️</span>
+              <span>About Us</span>
+            </Link>
+            <Link
+              href="/about#store-location"
+              className="cat-nav-link min-h-[32px] px-2.5 py-1 rounded-full transition-colors bg-[#C9A24A]/20 hover:bg-[#C9A24A]/30 text-[#FCE59F] flex items-center gap-1 font-bold border border-[#C9A24A]/40"
+            >
+              <span>📍</span>
+              <span>Store Locator</span>
+            </Link>
           </div>
         </nav>
       </header>
@@ -649,13 +666,30 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="mobile-nav-panel fixed inset-y-0 left-0 z-[810] w-[85vw] max-w-sm bg-[#073B2A] text-white flex flex-col p-5 shadow-2xl"
+              className="mobile-nav-panel fixed inset-y-0 left-0 z-[810] w-[88vw] max-w-sm bg-[#073B2A] text-white flex flex-col p-4 sm:p-5 shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between pb-4 border-b border-[#C9A24A]/20">
-                <span className="font-black text-lg text-white">GRIHAM 99+</span>
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#C9A24A]/20">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                    <img
+                      src="/assets/logo.svg"
+                      alt="Griham 99+"
+                      className="w-full h-full object-contain brand-logo-gold-glow"
+                    />
+                  </div>
+                  <div>
+                    <span className="font-black text-base tracking-tight text-white block">
+                      GRIHAM <span className="text-[#C9A24A]">99+</span>
+                    </span>
+                    <span className="text-[9px] text-[#C9A24A]/80 tracking-wider uppercase block">
+                      {siteConfig.hindiTagline}
+                    </span>
+                  </div>
+                </div>
                 <button
-                  className="close-mobile-nav-btn min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-stone-300 hover:text-white"
+                  className="close-mobile-nav-btn min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-stone-300 hover:text-white rounded-full transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close Navigation"
                 >
@@ -663,54 +697,178 @@ export default function Header() {
                 </button>
               </div>
 
-              <div className="py-4 space-y-3 flex-1 overflow-y-auto">
-                <div className="text-xs uppercase tracking-wider text-[#C9A24A] font-bold">Categories</div>
-                {[
-                  { id: "all", label: "All Products" },
-                  { id: "under99", label: "🔥 Under ₹99 Store" },
-                  { id: "Kitchen & Dining", label: "Kitchen & Dining" },
-                  { id: "Home Decor & Festive", label: "Home Decor & Festive" },
-                  { id: "Pooja & Spiritual", label: "Pooja Essentials" },
-                  { id: "Storage & Utility", label: "Storage & Utility" },
-                ].map((c) => (
-                  <button
-                    key={c.id}
-                    className="w-full text-left py-2.5 px-3 rounded-lg text-sm font-semibold hover:bg-white/10 flex justify-between items-center"
-                    onClick={() => {
-                      handleCategoryNav(c.id);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    <span>{c.label}</span>
-                    <span>&rarr;</span>
-                  </button>
-                ))}
+              {/* Scrollable Nav Content */}
+              <div className="py-3 space-y-4 flex-1 overflow-y-auto pr-1">
+                {/* Store Shortcuts */}
+                <div>
+                  <div className="text-[11px] uppercase tracking-wider text-[#C9A24A] font-bold mb-1.5 px-2">
+                    {language === "hi" ? "त्वरित लिंक" : "Store Shortcuts"}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-left text-xs font-bold text-white flex items-center gap-2"
+                      onClick={() => {
+                        handleCategoryNav("all");
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span>🏠</span>
+                      <span>{language === "hi" ? "सभी उत्पाद" : "All Items"}</span>
+                    </button>
+                    <button
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-[#C9A24A]/20 hover:bg-[#C9A24A]/30 text-left text-xs font-bold text-[#FCE59F] flex items-center gap-2 border border-[#C9A24A]/30"
+                      onClick={() => {
+                        handleCategoryNav("under99");
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span>⚡</span>
+                      <span>{language === "hi" ? "₹99 स्टोर" : "Under ₹99"}</span>
+                    </button>
+                    <button
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-left text-xs font-bold text-white flex items-center gap-2"
+                      onClick={() => {
+                        setIsCartOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span>🛍️</span>
+                      <span>Cart ({cartCount})</span>
+                    </button>
+                    <button
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-left text-xs font-bold text-white flex items-center gap-2"
+                      onClick={() => {
+                        setIsWishlistOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span>❤️</span>
+                      <span>Wishlist ({wishlist.length})</span>
+                    </button>
+                    <Link
+                      href="/about"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-left text-xs font-bold text-white flex items-center gap-2"
+                    >
+                      <span>ℹ️</span>
+                      <span>{language === "hi" ? "हमारे बारे में" : "About Us"}</span>
+                    </Link>
+                    <Link
+                      href="/about#store-location"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-[#C9A24A]/25 hover:bg-[#C9A24A]/35 text-left text-xs font-bold text-[#FCE59F] flex items-center gap-2 border border-[#C9A24A]/40 col-span-2"
+                    >
+                      <span>📍</span>
+                      <span>{language === "hi" ? "जयपुर स्टोर लोकेशन (मैप & पता)" : "Jaipur Store Locator & Map"}</span>
+                    </Link>
+                  </div>
+                </div>
 
-                <div className="pt-4 border-t border-[#C9A24A]/20 space-y-2">
+                {/* 8 Product Categories */}
+                <div>
+                  <div className="text-[11px] uppercase tracking-wider text-[#C9A24A] font-bold mb-1.5 px-2">
+                    {language === "hi" ? "श्रेणियां (8 मुख्य गलियारे)" : "Product Aisles"}
+                  </div>
+                  <div className="space-y-1">
+                    {[
+                      { id: "kitchen", label: "Kitchen & Dining", icon: "🍳" },
+                      { id: "home", label: "Home Essentials & Lights", icon: "🏠" },
+                      { id: "beauty", label: "Beauty & Personal Care", icon: "🌿" },
+                      { id: "gifts", label: "Festive & Sacred Gifts", icon: "🪔" },
+                      { id: "storage", label: "Storage & Jars", icon: "📦" },
+                      { id: "toys", label: "Toys & Kids Learning", icon: "🧸" },
+                      { id: "utility", label: "Everyday Utility Tools", icon: "🧹" },
+                      { id: "lifestyle", label: "Lifestyle Accessories", icon: "🎒" },
+                    ].map((c) => (
+                      <button
+                        key={c.id}
+                        className={`w-full text-left py-2.5 px-3 rounded-lg text-xs font-semibold flex justify-between items-center transition-colors min-h-[40px] ${
+                          activeCategory === c.id
+                            ? "bg-[#C9A24A] text-[#073B2A] font-bold"
+                            : "text-stone-200 hover:bg-white/10"
+                        }`}
+                        onClick={() => {
+                          handleCategoryNav(c.id);
+                          setIsMobileMenuOpen(false);
+                        }}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{c.icon}</span>
+                          <span>{c.label}</span>
+                        </span>
+                        <span className="text-[10px] opacity-70">&rarr;</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Delivery & Language */}
+                <div className="pt-3 border-t border-[#C9A24A]/20 space-y-2">
                   <button
-                    className="w-full text-left py-2 px-3 text-sm flex items-center gap-2 text-stone-200"
+                    className="w-full text-left py-2.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-xs flex items-center justify-between text-stone-200 min-h-[44px]"
                     onClick={() => {
                       setIsPincodeOpen(true);
                       setIsMobileMenuOpen(false);
                     }}
                   >
-                    📍 Deliver to: {pincode.slice(0, 6)}
+                    <span>📍 Deliver to: <strong>{pincode.slice(0, 6)}</strong></span>
+                    <span className="text-[10px] text-[#C9A24A] font-bold">Change</span>
                   </button>
-                  <div className="flex items-center gap-3 px-3 py-2 text-sm text-stone-200">
-                    <span>Language:</span>
-                    <button
-                      className={`px-2 py-0.5 rounded text-xs font-bold ${language === "en" ? "bg-[#C9A24A] text-[#073B2A]" : "bg-white/10"}`}
-                      onClick={() => setLanguage("en")}
-                    >
-                      EN
-                    </button>
-                    <button
-                      className={`px-2 py-0.5 rounded text-xs font-bold ${language === "hi" ? "bg-[#C9A24A] text-[#073B2A]" : "bg-white/10"}`}
-                      onClick={() => setLanguage("hi")}
-                    >
-                      हिंदी
-                    </button>
+
+                  <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/5 text-xs text-stone-200 min-h-[44px]">
+                    <span>Language / भाषा:</span>
+                    <div className="flex gap-1.5">
+                      <button
+                        className={`min-h-[36px] min-w-[40px] px-3 py-1 rounded text-xs font-bold transition-colors ${
+                          language === "en"
+                            ? "bg-[#C9A24A] text-[#073B2A]"
+                            : "bg-white/10 text-stone-300"
+                        }`}
+                        onClick={() => setLanguage("en")}
+                      >
+                        EN
+                      </button>
+                      <button
+                        className={`min-h-[36px] min-w-[40px] px-3 py-1 rounded text-xs font-bold transition-colors ${
+                          language === "hi"
+                            ? "bg-[#C9A24A] text-[#073B2A]"
+                            : "bg-white/10 text-stone-300"
+                        }`}
+                        onClick={() => setLanguage("hi")}
+                      >
+                        हिंदी
+                      </button>
+                    </div>
                   </div>
+                </div>
+
+                {/* Direct Customer Support (Clickable Phone, Email, WhatsApp) */}
+                <div className="pt-3 border-t border-[#C9A24A]/20 space-y-2">
+                  <div className="text-[11px] uppercase tracking-wider text-[#C9A24A] font-bold px-2">
+                    Customer Care & Support
+                  </div>
+                  <a
+                    href={`tel:${siteConfig.supportPhoneTel || "+919352456169"}`}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-stone-200 min-h-[44px] transition-colors"
+                  >
+                    <span className="text-sm">📞</span>
+                    <span>Call: <strong>{siteConfig.supportPhone}</strong></span>
+                  </a>
+                  <a
+                    href={`mailto:${siteConfig.supportEmail || "support@griham99.com"}`}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-stone-200 min-h-[44px] transition-colors"
+                  >
+                    <span className="text-sm">✉️</span>
+                    <span>Email: <strong>{siteConfig.supportEmail || "support@griham99.com"}</strong></span>
+                  </a>
+                  <a
+                    href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent("Hello Griham 99+, I would like to inquire about products.")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-[#168752] hover:bg-[#126b41] text-white text-xs font-bold min-h-[44px] transition-colors shadow"
+                  >
+                    <span>💬 Chat on WhatsApp</span>
+                  </a>
                 </div>
               </div>
             </motion.div>

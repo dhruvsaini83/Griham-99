@@ -158,13 +158,19 @@ export function ShopProvider({ children }) {
     }
   }, [wishlist, isLoaded]);
 
-  // Toast helper
+  // Toast helper with duplicate protection
   const showToast = (message) => {
-    const id = Date.now() + Math.random();
-    setToasts((prev) => [...prev, { id, message }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3200);
+    setToasts((prev) => {
+      // Prevent showing the exact same toast message multiple times concurrently
+      if (prev.some((t) => t.message === message)) {
+        return prev;
+      }
+      const id = Date.now() + Math.random();
+      setTimeout(() => {
+        setToasts((curr) => curr.filter((t) => t.id !== id));
+      }, 3200);
+      return [...prev, { id, message }];
+    });
   };
 
   // Cart actions
@@ -220,16 +226,14 @@ export function ShopProvider({ children }) {
     );
     const prodName = product ? product.name.slice(0, 24) : "Product";
 
-    setWishlist((prev) => {
-      const exists = prev.some((id) => String(id) === idToToggle);
-      if (exists) {
-        showToast(`Removed "${prodName}" from wishlist`);
-        return prev.filter((id) => String(id) !== idToToggle);
-      } else {
-        showToast(`Saved "${prodName}" to wishlist ❤️`);
-        return [...prev, productId];
-      }
-    });
+    const exists = wishlist.some((id) => String(id) === idToToggle);
+    if (exists) {
+      setWishlist((prev) => prev.filter((id) => String(id) !== idToToggle));
+      showToast(`Removed "${prodName}" from wishlist`);
+    } else {
+      setWishlist((prev) => [...prev, productId]);
+      showToast(`Saved "${prodName}" to wishlist ❤️`);
+    }
   };
 
   const isInWishlist = (productId) =>

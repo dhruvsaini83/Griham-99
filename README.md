@@ -43,6 +43,15 @@
 ### 🌐 Bilingual Interface Switcher
 - Header toggle for instant language preview switching between **English** and **Hindi (हिंदी)**.
 
+### 🏛️ Physical Store Hub & Local SEO Integration (`/about`)
+- **Jaipur Retail Storefront**: Dedicated about & visit store page for Griham 99+ at *Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak, Jaipur - 302015*.
+- **Interactive Google Maps Embed**: Embedded live map with strict CSP configuration, store directions link, and direct phone/WhatsApp actions.
+- **Local Business JSON-LD Schema**: Full `schema.org/Store` structured data including exact GeoCoordinates (`26.8788685, 75.7926009`), opening hours (`10:00 AM - 9:00 PM Mon-Sun`), accepted payment modes, phone number, and official logo link.
+
+### ✨ Luxury Visual Identity & Golden Glow Logo
+- **Official Brand Mark**: Vector SVG logo (`/assets/logo.svg`) cleanly integrated across Desktop & Mobile Navbars, Footer, Splash Screen, and Store Cards.
+- **Royal Golden Shadow Tint**: Soft, elegant drop-shadow aura (`rgba(201,162,74,0.5)`) without artificial borders, providing natural blending against deep emerald surfaces.
+
 ### 🎨 Royal Indian Aesthetic Design
 - **Harmonious Color Palette**: Deep Forest Green (`#073B2A`), Metallic Gold accents (`#C9A24A`), Warm Cream (`#FAF7F2`), and Soft Ivory (`#F8F3E8`).
 - **Smooth Animations**: Powered by Framer Motion, custom scrollbar styling, and background modal scroll-locking.
@@ -65,6 +74,9 @@
 ```plaintext
 Griham-99/
 ├── app/
+│   ├── about/
+│   │   ├── layout.js              # About page Local SEO metadata & OpenGraph tags
+│   │   └── page.js                # About Us & Jaipur Store Locator page with Google Map
 │   ├── api/
 │   │   ├── newsletter/route.js    # Newsletter subscription API
 │   │   ├── orders/route.js        # Order creation, validation & tamper protection
@@ -73,7 +85,8 @@ Griham-99/
 │   │   └── seed/route.js          # Database seed utility
 │   ├── fonts/                     # Self-hosted typography assets
 │   ├── globals.css                # Tailwind design system & luxury aesthetic styles
-│   ├── layout.js                  # App metadata, OpenGraph & root layout
+│   ├── layout.js                  # App metadata, OpenGraph, favicon & root layout
+│   ├── not-found.js               # Branded luxury 404 page
 │   └── page.js                    # Main storefront client composition
 ├── components/
 │   ├── CartDrawer.jsx             # Slide-in cart with coupon & free shipping progress
@@ -82,16 +95,16 @@ Griham-99/
 │   ├── EditorialBanner.jsx        # Festive promotional banner
 │   ├── Filters.jsx                # Price range & category filters
 │   ├── Footer.jsx                 # Storefooter with newsletter & links
-│   ├── Header.jsx                 # Ticker, sticky navigation & live search
-│   ├── Hero.jsx                   # Hero section with primary CTAs
+│   ├── Header.jsx                 # Ticker, sticky navigation, search & logo
+│   ├── Hero.jsx                   # Hero section with primary CTAs & badges
 │   ├── PincodeModal.jsx           # Postal delivery check modal
 │   ├── PriceStrip.jsx             # Quick price tier selector (Under ₹49, ₹99, etc.)
 │   ├── ProductCard.jsx            # Product card with badges, wishlist & cart steppers
 │   ├── ProductGrid.jsx            # Responsive catalog grid with sorting
 │   ├── QuickViewModal.jsx         # Product modal with specifications
-│   ├── SplashScreen.jsx           # Luxury initial page load screen
+│   ├── SplashScreen.jsx           # Luxury initial page load screen with logo
 │   ├── ToastContainer.jsx         # Floating feedback toast notifications
-│   ├── TrustPillars.jsx           # Trust badges (Free delivery, verified quality)
+│   ├── TrustPillars.jsx           # Trust badges (Value from ₹49, WhatsApp support)
 │   ├── WhatsAppButton.jsx         # Floating WhatsApp order assist action
 │   └── WishlistDrawer.jsx         # Slide-in wishlist drawer
 ├── context/
@@ -100,6 +113,7 @@ Griham-99/
 │   └── products.js                # Initial catalogue data & offline fallback
 ├── lib/
 │   ├── animations.js              # Framer Motion transitions & easing curves
+│   ├── config.js                  # Central siteConfig (Address, coordinates, phone, WhatsApp)
 │   ├── mongodb.js                 # Cached MongoDB Mongoose connection handler
 │   ├── rate-limiter.js            # Sliding-window rate limiter
 │   └── validators.js              # Zod validation schemas
@@ -108,6 +122,13 @@ Griham-99/
 │   ├── Product.js                 # Mongoose Product schema
 │   ├── Subscriber.js              # Mongoose Newsletter Subscriber schema
 │   └── User.js                    # Mongoose User schema
+├── public/
+│   ├── assets/
+│   │   ├── logo.svg               # Official brand logo
+│   │   ├── IMG-20261006-WA0023.jpg# Physical store exterior photo
+│   │   └── whatsapp.png           # WhatsApp branding badge
+│   ├── icon.svg                   # Browser tab icon
+│   └── logo.svg                   # Root logo asset
 ├── middleware.js                  # Next.js global edge security middleware
 ├── tests/
 │   ├── e2e-runner.js              # 24-test automated Playwright & security suite

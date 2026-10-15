@@ -108,6 +108,8 @@ export default function WishlistDrawer() {
                     onClick={() => {
                       setIsWishlistOpen(false);
                       setActiveCategory("all");
+                      const el = document.getElementById("catalog");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     {language === "hi" ? "उत्पाद देखें &rarr;" : "Explore Finds &rarr;"}

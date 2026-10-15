@@ -263,23 +263,34 @@
     }
 
     .brand-emblem-wrap {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #084c36 0%, #032119 100%);
-      border: 2px solid var(--color-gold);
-      box-shadow: 0 0 10px rgba(201, 162, 74, 0.35);
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
       flex-shrink: 0;
     }
 
     .brand-emblem-svg {
       width: 38px;
       height: 38px;
+    }
+
+    .brand-emblem-wrap img,
+    .brand-logo-wrap img,
+    .brand-logo-gold-glow {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 9px rgba(201, 162, 74, 0.5)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    .brand-logo-link:hover .brand-logo-gold-glow,
+    .brand-logo-link:hover .brand-logo-wrap img {
+      filter: drop-shadow(0 0 15px rgba(230, 200, 117, 0.75)) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+      transform: scale(1.03);
     }
 
     .brand-text-wrap {
@@ -816,6 +827,19 @@
       top: -12px;
       right: -12px;
       background: var(--color-forest);
+    }
+
+    @media (max-width: 640px) {
+      .hero-badge-left {
+        bottom: 8px !important;
+        left: 8px !important;
+        max-width: calc(100% - 16px);
+      }
+      .hero-badge-right {
+        top: 8px !important;
+        right: 8px !important;
+        max-width: calc(100% - 16px);
+      }
     }
 
     @keyframes floatBadge {
