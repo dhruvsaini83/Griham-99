@@ -1,0 +1,35 @@
+# dependencies
+**/node_modules/
+/.pnp
+.pnp.js
+
+# next.js
+**/.next/
+**/out/
+
+# production
+**/build/
+
+# debug & logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env
+.env*.local
+
+# vercel
+.vercel
+
+# system
+.DS_Store
+Thumbs.db
+
+# test artifacts & reports (unnecessary on git)
+artifacts/
+**/artifacts/
+test-results/
+**/test-results/
+playwright-report/
+**/playwright-report/
+blob-report/
