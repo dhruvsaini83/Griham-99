@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
+import { siteConfig } from "@/lib/config";
 
 export default function Footer() {
   const {
@@ -169,7 +170,7 @@ export default function Footer() {
                 fontWeight: 700,
               }}
             >
-              📞 Support: +{process.env.NEXT_PUBLIC_STORE_WHATSAPP_NUMBER || "91 98765 43210"} (Mon-Sat, 10 AM - 7 PM)
+              📞 Support: {siteConfig.supportPhone} ({siteConfig.supportHours})
             </div>
           </div>
 

@@ -142,14 +142,16 @@ Copy `.env.example` to `.env.local` and configure your settings:
 ```bash
 cp .env.example .env.local
 ```
-Update `.env.local` as required:
+Update `.env.local` as required (Private backend credentials only):
 ```env
 # MongoDB Connection String (Compass local or Atlas)
 MONGODB_URI=mongodb://127.0.0.1:27017/griham99
 
-# WhatsApp Business Dispatch Number
-NEXT_PUBLIC_STORE_WHATSAPP_NUMBER=919876543210
+# Admin Authorization Secret Key
+ADMIN_SECRET_KEY=griham_admin_secret_99
 ```
+
+> **Store Configuration & WhatsApp Number:** Public store settings, support phone, and WhatsApp numbers are cleanly managed in `lib/config.js` (`siteConfig.whatsappNumber`).
 
 ### 4. Running the Development Server
 ```bash

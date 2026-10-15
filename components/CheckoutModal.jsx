@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
+import { siteConfig } from "@/lib/config";
 
-const STORE_WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_STORE_WHATSAPP_NUMBER || "919876543210";
+const STORE_WHATSAPP_NUMBER = siteConfig.whatsappNumber;
 
 export default function CheckoutModal() {
   const {
