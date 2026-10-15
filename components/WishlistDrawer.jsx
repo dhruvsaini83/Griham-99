@@ -7,12 +7,14 @@ import { useShop } from "@/context/ShopContext";
 export default function WishlistDrawer() {
   const {
     PRODUCTS,
+    cart,
     wishlist,
     isWishlistOpen,
     setIsWishlistOpen,
     addToCart,
     toggleWishlist,
     setActiveCategory,
+    showToast,
     language,
   } = useShop();
 
@@ -26,8 +28,20 @@ export default function WishlistDrawer() {
   );
 
   const handleMoveToCart = (product) => {
+    const pId = product.id ?? product.productId ?? product._id;
+    const cartItem = cart?.find(
+      (item) => String(item.id || item.productId) === String(pId)
+    );
+    if (cartItem && cartItem.quantity >= 10) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: यह आइटम पहले से ही 10 कार्ट में है!"
+          : "⚠️ Maximum limit: You already have 10 units of this item in your cart!"
+      );
+      return;
+    }
     addToCart(product, 1);
-    toggleWishlist(product.id ?? product.productId ?? product._id);
+    toggleWishlist(pId);
   };
 
   return (

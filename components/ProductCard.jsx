@@ -13,6 +13,7 @@ export default function ProductCard({ product, index = 0 }) {
     cart,
     updateCartQuantity,
     openQuickView,
+    showToast,
     language,
   } = useShop();
 
@@ -32,6 +33,14 @@ export default function ProductCard({ product, index = 0 }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    if (cartQty >= 10) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+      );
+      return;
+    }
     addToCart(product, 1);
     setAddedAnimation(true);
     setTimeout(() => setAddedAnimation(false), 1200);
@@ -51,6 +60,14 @@ export default function ProductCard({ product, index = 0 }) {
 
   const handleIncreaseQty = (e) => {
     e.stopPropagation();
+    if (cartQty >= 10) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+      );
+      return;
+    }
     updateCartQuantity(prodId, 1);
   };
 
@@ -202,16 +219,33 @@ export default function ProductCard({ product, index = 0 }) {
                   "−"
                 )}
               </motion.button>
-              <span className="qty-value px-2 text-sm font-extrabold text-[#073B2A] select-none tracking-tight">
-                {cartQty} {language === "hi" ? "कार्ट में" : "in Cart"}
-              </span>
+              <div className="flex flex-col items-center justify-center px-2">
+                <span className="qty-value text-sm font-extrabold text-[#073B2A] select-none tracking-tight">
+                  {cartQty} {language === "hi" ? "कार्ट में" : "in Cart"}
+                </span>
+                {cartQty >= 10 && (
+                  <span className="text-[10px] font-bold text-amber-600 leading-none">
+                    {language === "hi" ? "अधिकतम 10" : "Max 10"}
+                  </span>
+                )}
+              </div>
               <motion.button
-                whileTap={{ scale: 0.88 }}
+                whileTap={cartQty < 10 ? { scale: 0.88 } : {}}
                 type="button"
-                className="qty-btn-plus min-h-[44px] min-w-[44px] flex items-center justify-center text-lg font-black text-[#073B2A] hover:bg-[#073B2A] hover:text-white transition-colors"
+                className={`qty-btn-plus min-h-[44px] min-w-[44px] flex items-center justify-center text-lg font-black transition-colors ${
+                  cartQty >= 10
+                    ? "text-stone-300 bg-stone-50 cursor-not-allowed"
+                    : "text-[#073B2A] hover:bg-[#073B2A] hover:text-white"
+                }`}
                 onClick={handleIncreaseQty}
                 aria-label="Increase quantity"
-                title="Increase quantity"
+                title={
+                  cartQty >= 10
+                    ? language === "hi"
+                      ? "अधिकतम सीमा: 10 आइटम"
+                      : "Maximum limit: 10 units"
+                    : "Increase quantity"
+                }
               >
                 +
               </motion.button>

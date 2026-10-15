@@ -240,24 +240,54 @@ export default function CartDrawer() {
                           </span>
                         </div>
                         <div className="cart-item-controls flex items-center justify-between mt-2">
-                          <div className="qty-stepper flex items-center border border-[#E7E1D5] rounded-full overflow-hidden bg-white shadow-sm">
-                            <motion.button
-                              whileTap={{ scale: 0.85 }}
-                              className="qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base hover:bg-[#F8F3E8] transition-colors"
-                              onClick={() => updateCartQuantity(item.id, -1)}
-                            >
-                              -
-                            </motion.button>
-                            <span className="qty-stepper-value px-2 text-xs sm:text-sm font-bold">
-                              {item.quantity}
-                            </span>
-                            <motion.button
-                              whileTap={{ scale: 0.85 }}
-                              className="qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base hover:bg-[#F8F3E8] transition-colors"
-                              onClick={() => updateCartQuantity(item.id, 1)}
-                            >
-                              +
-                            </motion.button>
+                          <div className="flex items-center gap-1.5">
+                            <div className="qty-stepper flex items-center border border-[#E7E1D5] rounded-full overflow-hidden bg-white shadow-sm">
+                              <motion.button
+                                whileTap={{ scale: 0.85 }}
+                                className="qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base hover:bg-[#F8F3E8] transition-colors"
+                                onClick={() => updateCartQuantity(item.id, -1)}
+                                aria-label="Decrease quantity"
+                              >
+                                -
+                              </motion.button>
+                              <span className="qty-stepper-value px-2 text-xs sm:text-sm font-bold">
+                                {item.quantity}
+                              </span>
+                              <motion.button
+                                whileTap={item.quantity < 10 ? { scale: 0.85 } : {}}
+                                className={`qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base transition-colors ${
+                                  item.quantity >= 10
+                                    ? "text-stone-300 bg-stone-50 cursor-not-allowed"
+                                    : "hover:bg-[#F8F3E8]"
+                                }`}
+                                onClick={() => {
+                                  if (item.quantity >= 10) {
+                                    showToast(
+                                      language === "hi"
+                                        ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+                                        : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+                                    );
+                                    return;
+                                  }
+                                  updateCartQuantity(item.id, 1);
+                                }}
+                                aria-label="Increase quantity"
+                                title={
+                                  item.quantity >= 10
+                                    ? language === "hi"
+                                      ? "अधिकतम सीमा: 10 आइटम"
+                                      : "Maximum limit: 10 units"
+                                    : "Increase quantity"
+                                }
+                              >
+                                +
+                              </motion.button>
+                            </div>
+                            {item.quantity >= 10 && (
+                              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded select-none">
+                                {language === "hi" ? "अधिकतम 10" : "Max 10"}
+                              </span>
+                            )}
                           </div>
                           <button
                             className="cart-item-remove-btn min-h-[36px] text-xs text-stone-500 hover:text-[#C83214] underline px-2"

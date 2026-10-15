@@ -6,6 +6,7 @@ import Product from "@/models/Product";
 import { PRODUCTS as FALLBACK_PRODUCTS } from "@/data/products";
 import { orderCreateSchema, sanitizeText } from "@/lib/validators";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
+import { MAX_ITEM_QUANTITY } from "@/lib/config";
 
 // POST /api/orders
 // Hardened with Rate Limiting, Zod Schema Validation, NoSQL Injection prevention,
@@ -101,7 +102,7 @@ export async function POST(request) {
       }
 
       const verifiedPrice = Number(dbProduct.price);
-      const verifiedQty = Math.min(50, Math.max(1, Number(item.qty)));
+      const verifiedQty = Math.min(MAX_ITEM_QUANTITY, Math.max(1, Number(item.qty)));
       serverSubtotal += verifiedPrice * verifiedQty;
 
       verifiedOrderItems.push({

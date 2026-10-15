@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { PRODUCTS as INITIAL_PRODUCTS } from "@/data/products";
+import { MAX_ITEM_QUANTITY } from "@/lib/config";
 
 const ShopContext = createContext(null);
 
@@ -114,7 +115,11 @@ export function ShopProvider({ children }) {
       if (savedCart) {
         const parsed = JSON.parse(savedCart);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setCart(parsed);
+          const sanitizedCart = parsed.map((item) => ({
+            ...item,
+            quantity: Math.min(item.quantity || 1, MAX_ITEM_QUANTITY),
+          }));
+          setCart(sanitizedCart);
         }
       }
 
@@ -159,46 +164,98 @@ export function ShopProvider({ children }) {
   }, [wishlist, isLoaded]);
 
   // Toast helper with duplicate protection
-  const showToast = (message) => {
+  const showToast = (message, duration = 3500) => {
     setToasts((prev) => {
       // Prevent showing the exact same toast message multiple times concurrently
       if (prev.some((t) => t.message === message)) {
         return prev;
       }
       const id = Date.now() + Math.random();
+      const effectiveDuration = message.startsWith("⚠️") ? 4500 : duration;
       setTimeout(() => {
         setToasts((curr) => curr.filter((t) => t.id !== id));
-      }, 3200);
+      }, effectiveDuration);
       return [...prev, { id, message }];
     });
   };
 
   // Cart actions
   const addToCart = (product, quantity = 1) => {
+    const pId = product.id || product.productId;
+    const existing = cart.find(
+      (item) => (item.id || item.productId) === pId
+    );
+
+    if (existing && existing.quantity >= MAX_ITEM_QUANTITY) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit: You can only add up to 10 units of this item!"
+      );
+      return;
+    }
+
+    if (existing && existing.quantity + quantity > MAX_ITEM_QUANTITY) {
+      setCart((prev) =>
+        prev.map((item) =>
+          (item.id || item.productId) === pId
+            ? { ...item, quantity: MAX_ITEM_QUANTITY }
+            : item
+        )
+      );
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा 10 है! कुल मात्रा 10 पर सीमित कर दी गई है।"
+          : "⚠️ Limit reached: Capped at maximum 10 units for this item."
+      );
+      return;
+    }
+
     setCart((prev) => {
-      const pId = product.id || product.productId;
-      const existing = prev.find(
+      const inPrev = prev.find(
         (item) => (item.id || item.productId) === pId
       );
-      if (existing) {
+      if (inPrev) {
+        const newQty = Math.min(inPrev.quantity + quantity, MAX_ITEM_QUANTITY);
         return prev.map((item) =>
           (item.id || item.productId) === pId
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: newQty }
             : item
         );
       }
-      return [...prev, { ...product, id: pId, quantity }];
+      const initialQty = Math.min(quantity, MAX_ITEM_QUANTITY);
+      return [...prev, { ...product, id: pId, quantity: initialQty }];
     });
-    showToast(`Added "${product.name.slice(0, 28)}..." to cart!`);
+    showToast(
+      language === "hi"
+        ? `"${product.name.slice(0, 24)}..." कार्ट में जोड़ा गया!`
+        : `Added "${product.name.slice(0, 28)}..." to cart!`
+    );
   };
 
   const updateCartQuantity = (productId, delta) => {
+    const targetItem = cart.find(
+      (item) => (item.id || item.productId) === productId
+    );
+
+    if (targetItem && delta > 0 && targetItem.quantity >= MAX_ITEM_QUANTITY) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit reached: You can only add up to 10 units of this item!"
+      );
+      return;
+    }
+
     setCart((prev) =>
       prev
         .map((item) => {
           const id = item.id || item.productId;
           if (id === productId) {
             const newQty = item.quantity + delta;
+            if (newQty > MAX_ITEM_QUANTITY) {
+              return { ...item, quantity: MAX_ITEM_QUANTITY };
+            }
             return newQty > 0 ? { ...item, quantity: newQty } : null;
           }
           return item;
@@ -340,12 +397,15 @@ export function ShopProvider({ children }) {
         setPincode,
         setLanguage,
         showToast,
+        maxItemQuantity: MAX_ITEM_QUANTITY,
       }}
     >
       {children}
     </ShopContext.Provider>
   );
 }
+
+export { MAX_ITEM_QUANTITY };
 
 export function useShop() {
   const context = useContext(ShopContext);

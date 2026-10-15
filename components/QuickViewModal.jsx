@@ -63,11 +63,35 @@ export default function QuickViewModal() {
 
   const handleAddToCart = () => {
     if (!p) return;
+    const currentItem = cart?.find(
+      (item) => String(item.id || item.productId) === String(p.id ?? p.productId ?? p._id)
+    );
+    if (currentItem && currentItem.quantity >= 10) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+      );
+      return;
+    }
     addToCart(p, 1);
   };
 
   const handleBuyNow = () => {
     if (!p) return;
+    const currentItem = cart?.find(
+      (item) => String(item.id || item.productId) === String(p.id ?? p.productId ?? p._id)
+    );
+    if (currentItem && currentItem.quantity >= 10) {
+      showToast(
+        language === "hi"
+          ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+          : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+      );
+      setQuickViewProduct(null);
+      setIsCheckoutOpen(true);
+      return;
+    }
     addToCart(p, 1);
     setQuickViewProduct(null);
     setIsCheckoutOpen(true);
@@ -207,18 +231,43 @@ export default function QuickViewModal() {
                               "−"
                             )}
                           </motion.button>
-                          <span className="px-3 text-sm font-extrabold text-[#073B2A] select-none">
-                            {cartQty} {language === "hi" ? "कार्ट में" : "in Cart"}
-                          </span>
+                          <div className="flex flex-col items-center justify-center px-3">
+                            <span className="text-sm font-extrabold text-[#073B2A] select-none">
+                              {cartQty} {language === "hi" ? "कार्ट में" : "in Cart"}
+                            </span>
+                            {cartQty >= 10 && (
+                              <span className="text-[10px] font-bold text-amber-600 leading-none">
+                                {language === "hi" ? "अधिकतम 10" : "Max 10"}
+                              </span>
+                            )}
+                          </div>
                           <motion.button
-                            whileTap={{ scale: 0.88 }}
+                            whileTap={cartQty < 10 ? { scale: 0.88 } : {}}
                             type="button"
-                            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-lg font-black text-[#073B2A] hover:bg-[#073B2A] hover:text-white transition-colors"
-                            onClick={() =>
-                              updateCartQuantity(p.id ?? p.productId ?? p._id, 1)
-                            }
+                            className={`min-h-[44px] min-w-[44px] flex items-center justify-center text-lg font-black transition-colors ${
+                              cartQty >= 10
+                                ? "text-stone-300 bg-stone-50 cursor-not-allowed"
+                                : "text-[#073B2A] hover:bg-[#073B2A] hover:text-white"
+                            }`}
+                            onClick={() => {
+                              if (cartQty >= 10) {
+                                showToast(
+                                  language === "hi"
+                                    ? "⚠️ अधिकतम सीमा: एक आइटम अधिकतम 10 ही कार्ट में जोड़ सकते हैं!"
+                                    : "⚠️ Maximum limit reached: You can only add up to 10 of this item!"
+                                );
+                                return;
+                              }
+                              updateCartQuantity(p.id ?? p.productId ?? p._id, 1);
+                            }}
                             aria-label="Increase quantity"
-                            title="Increase quantity"
+                            title={
+                              cartQty >= 10
+                                ? language === "hi"
+                                  ? "अधिकतम सीमा: 10 आइटम"
+                                  : "Maximum limit: 10 units"
+                                : "Increase quantity"
+                            }
                           >
                             +
                           </motion.button>
