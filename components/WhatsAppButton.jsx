@@ -4,7 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 
-const STORE_WHATSAPP_NUMBER = "919876543210";
+const STORE_WHATSAPP_NUMBER =
+  process.env.NEXT_PUBLIC_STORE_WHATSAPP_NUMBER || "919876543210";
 
 export default function WhatsAppButton() {
   const { cart, cartCount, grandTotal } = useShop();

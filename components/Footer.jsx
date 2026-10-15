@@ -169,7 +169,7 @@ export default function Footer() {
                 fontWeight: 700,
               }}
             >
-              📞 Support: +91 98765 43210 (Mon-Sat, 10 AM - 7 PM)
+              📞 Support: +{process.env.NEXT_PUBLIC_STORE_WHATSAPP_NUMBER || "91 98765 43210"} (Mon-Sat, 10 AM - 7 PM)
             </div>
           </div>
 
