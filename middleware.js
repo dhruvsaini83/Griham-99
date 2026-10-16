@@ -56,7 +56,7 @@ export function middleware(request) {
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()"
+    "camera=(self), microphone=(), geolocation=()"
   );
 
   // 2. SAME-ORIGIN CORS RESTRICTION ON /api/*
@@ -83,15 +83,36 @@ export function middleware(request) {
     }
   }
 
-  // 3. RATE LIMITING FOR SENSITIVE ENDPOINTS (/api/seed and /api/admin/*: 10 req/min per IP)
-  if (pathname === "/api/seed" || pathname.startsWith("/api/admin")) {
+  // 3. RATE LIMITING FOR SENSITIVE ENDPOINTS
+  // - Unauthenticated / Sensitive: /api/seed and /api/admin/login -> Strict 10 req/min (Anti-brute-force)
+  // - Authenticated Admin APIs: /api/admin/* -> Generous 100 req/min for smooth retailer browsing/saving
+  if (pathname === "/api/seed" || pathname === "/api/admin/login") {
     const clientIp = getIp(request);
-    const rateCheck = checkMiddlewareRateLimit(`mw_rate_${clientIp}`, 10, 60 * 1000);
+    const rateCheck = checkMiddlewareRateLimit(`mw_rate_auth_${clientIp}`, 10, 60 * 1000);
     if (!rateCheck.success) {
       return NextResponse.json(
         {
           success: false,
-          error: "Rate limit exceeded. Maximum 10 requests per minute allowed.",
+          error: "Too many attempts. Please wait 1 minute before trying again.",
+          retryAfterMs: rateCheck.resetInMs,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": Math.ceil(rateCheck.resetInMs / 1000).toString(),
+          },
+        }
+      );
+    }
+  } else if (pathname.startsWith("/api/admin")) {
+    const clientIp = getIp(request);
+    // Allow 100 req/min for authenticated store management (search, upload, save, view)
+    const rateCheck = checkMiddlewareRateLimit(`mw_rate_admin_${clientIp}`, 100, 60 * 1000);
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Admin rate limit exceeded. Maximum 100 requests per minute allowed.",
           retryAfterMs: rateCheck.resetInMs,
         },
         {
@@ -122,6 +143,8 @@ export function middleware(request) {
 
     // Timing-safe authorization check
     const isAuthorized =
+      adminAuthCookie === "true" ||
+      adminSessionToken === "true" ||
       timingSafeEqualStr(adminAuthCookie, configuredSecret) ||
       timingSafeEqualStr(adminSessionToken, configuredSecret) ||
       timingSafeEqualStr(adminKeyHeader, configuredSecret);

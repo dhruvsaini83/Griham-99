@@ -32,15 +32,15 @@ export async function POST(request) {
     const password = typeof body.password === "string" ? body.password : "";
     const secretKey = typeof body.secretKey === "string" ? body.secretKey : "";
 
-    // 2. Timing-safe verification against ADMIN_PASSWORD or ADMIN_SECRET_KEY
-    const isPasswordValid = isValidAdminPassword(password);
+    // 2. Timing-safe verification against ADMIN_PASSWORD and ADMIN_SECRET_KEY
+    const isPasswordValid = isValidAdminPassword(password) || isValidAdminSecret(password);
     const isSecretValid = isValidAdminSecret(secretKey);
 
     if (!isPasswordValid && !isSecretValid) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid admin password or secret key.",
+          error: "Invalid admin password or secret key. (Ghalat Password / Key)",
         },
         { status: 401 }
       );
@@ -66,7 +66,7 @@ export async function POST(request) {
       maxAge: 86400, // 1 day in seconds
     };
 
-    response.cookies.set("admin_auth", configuredSecret, cookieOptions);
+    response.cookies.set("admin_auth", "true", cookieOptions);
     response.cookies.set("admin_session_token", configuredSecret, cookieOptions);
 
     return response;

@@ -99,7 +99,7 @@ ProductSchema.virtual("id").get(function () {
 });
 
 // Auto-generate slug and sync bestseller / discount before saving
-ProductSchema.pre("save", function (next) {
+ProductSchema.pre("save", function () {
   if (!this.slug && this.name) {
     this.slug =
       this.name
@@ -122,8 +122,6 @@ ProductSchema.pre("save", function (next) {
       ((this.originalPrice - this.price) / this.originalPrice) * 100
     );
   }
-
-  next();
 });
 
 // Export existing or compile new model
