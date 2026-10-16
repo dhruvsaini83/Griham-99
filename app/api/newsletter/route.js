@@ -1,11 +1,31 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Subscriber from "@/models/Subscriber";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
+import { sanitizeNoSql } from "@/lib/security";
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const contact = (body?.contact || "").trim();
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(`newsletter_${clientIp}`, 10, 60 * 1000);
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many subscription attempts. Please slow down." },
+        { status: 429 }
+      );
+    }
+
+    const rawBody = await request.json();
+    const body = sanitizeNoSql(rawBody);
+
+    if (typeof body?.contact !== "string") {
+      return NextResponse.json(
+        { success: false, error: "Invalid contact format. String expected." },
+        { status: 400 }
+      );
+    }
+
+    const contact = body.contact.trim();
 
     if (!contact) {
       return NextResponse.json(

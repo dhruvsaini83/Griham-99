@@ -4,6 +4,7 @@ import Product from "@/models/Product";
 import { PRODUCTS } from "@/data/products";
 import { productCreateSchema, sanitizeText } from "@/lib/validators";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
+import { isValidAdminSecret, sanitizeNoSql } from "@/lib/security";
 
 // GET /api/products
 // Fetches catalog with rate limiting and automatic initial database seeding
@@ -94,23 +95,24 @@ export async function GET(request) {
 // Protected Admin route with Zod Validation & Admin Secret Key Authentication
 export async function POST(request) {
   try {
-    // 1. ADMIN AUTHORIZATION CHECK
+    // 1. ADMIN AUTHORIZATION CHECK (TIMING-SAFE)
     const adminKey = request.headers.get("x-admin-secret-key");
-    const configuredKey = process.env.ADMIN_SECRET_KEY || "griham_admin_secret_99";
+    const cookieToken = request.cookies.get("admin_auth")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
 
-    if (adminKey !== configuredKey) {
+    if (!isAuthorized) {
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized: Invalid or missing x-admin-secret-key header.",
+          error: "Unauthorized: Invalid or missing admin credentials.",
         },
         { status: 401 }
       );
     }
 
-    // 2. RATE LIMITING FOR PRODUCT CREATION (15 per min)
+    // 2. RATE LIMITING FOR PRODUCT CREATION (10 per min)
     const clientIp = getClientIp(request);
-    const rateCheck = checkRateLimit(`post_product_${clientIp}`, 15, 60 * 1000);
+    const rateCheck = checkRateLimit(`post_product_${clientIp}`, 10, 60 * 1000);
     if (!rateCheck.success) {
       return NextResponse.json(
         { success: false, error: "Too many product creations. Slow down." },
@@ -120,16 +122,17 @@ export async function POST(request) {
 
     if (!process.env.MONGODB_URI) {
       return NextResponse.json(
-        { success: false, error: "MONGODB_URI not configured in .env.local" },
+        { success: false, error: "Database configuration missing." },
         { status: 500 }
       );
     }
 
     await connectToDatabase();
     const rawBody = await request.json();
+    const sanitizedBody = sanitizeNoSql(rawBody);
 
     // 3. ZOD SCHEMA VALIDATION
-    const validationResult = productCreateSchema.safeParse(rawBody);
+    const validationResult = productCreateSchema.safeParse(sanitizedBody);
     if (!validationResult.success) {
       return NextResponse.json(
         {

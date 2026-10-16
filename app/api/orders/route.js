@@ -7,6 +7,7 @@ import { PRODUCTS as FALLBACK_PRODUCTS } from "@/data/products";
 import { orderCreateSchema, sanitizeText } from "@/lib/validators";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
 import { MAX_ITEM_QUANTITY } from "@/lib/config";
+import { sanitizeNoSql, isValidAdminSecret } from "@/lib/security";
 
 // POST /api/orders
 // Hardened with Rate Limiting, Zod Schema Validation, NoSQL Injection prevention,
@@ -34,7 +35,8 @@ export async function POST(request) {
 
     // 2. INPUT VALIDATION & NOSQL INJECTION PREVENTION
     const rawBody = await request.json();
-    const validationResult = orderCreateSchema.safeParse(rawBody);
+    const sanitizedBody = sanitizeNoSql(rawBody);
+    const validationResult = orderCreateSchema.safeParse(sanitizedBody);
 
     if (!validationResult.success) {
       const issueMsgs = validationResult.error.issues
@@ -219,20 +221,49 @@ export async function POST(request) {
 }
 
 // GET /api/orders
-// Hardened with sanitized query parameters
+// Protected: Requires valid admin authorization OR specific (orderId + mobile) match
 export async function GET(request) {
   try {
+    // 1. Rate limiting: 20 queries per minute per IP
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(`get_orders_${clientIp}`, 20, 60 * 1000);
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many order lookup requests. Please slow down." },
+        { status: 429 }
+      );
+    }
+
     if (!process.env.MONGODB_URI) {
       return NextResponse.json(
-        { success: false, error: "MONGODB_URI not configured." },
+        { success: false, error: "Database configuration missing." },
         { status: 500 }
       );
     }
 
-    await connectToDatabase();
+    // 2. Authorization Check
+    const adminKey = request.headers.get("x-admin-secret-key");
+    const cookieToken = request.cookies.get("admin_auth")?.value;
+    const isAdmin = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
+
     const { searchParams } = new URL(request.url);
     const orderIdParam = searchParams.get("orderId");
     const mobileParam = searchParams.get("mobile");
+
+    // Non-admin lookup MUST provide BOTH orderId AND registered customer mobile
+    if (!isAdmin) {
+      if (!orderIdParam || !mobileParam) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Unauthorized: Viewing order catalog requires admin authorization. Individual lookup requires both orderId and mobile.",
+          },
+          { status: 401 }
+        );
+      }
+    }
+
+    await connectToDatabase();
 
     const query = {};
     if (orderIdParam) {
@@ -242,7 +273,9 @@ export async function GET(request) {
       query.userMobile = sanitizeText(mobileParam);
     }
 
-    const orders = await Order.find(query).sort({ createdAt: -1 }).limit(50);
+    // Admins can see up to 50 orders; individual lookup fetches matching single order
+    const limit = isAdmin && !orderIdParam ? 50 : 1;
+    const orders = await Order.find(query).sort({ createdAt: -1 }).limit(limit);
 
     return NextResponse.json({
       success: true,
@@ -251,7 +284,7 @@ export async function GET(request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: "Failed to fetch orders: " + error.message },
       { status: 500 }
     );
   }

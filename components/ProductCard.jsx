@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
 
-export default function ProductCard({ product, index = 0 }) {
+const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }, ref) {
   const {
     isInWishlist,
     toggleWishlist,
@@ -73,6 +74,7 @@ export default function ProductCard({ product, index = 0 }) {
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -89,7 +91,7 @@ export default function ProductCard({ product, index = 0 }) {
       <div className="product-card-thumb-wrap aspect-square w-full relative overflow-hidden bg-[#F4EFE6]">
         <img
           src={product.image}
-          alt={product.name}
+          alt={`${product.name} at ${product.price || 99} rupees - Griham 99+`}
           className="product-card-img w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           loading="lazy"
           onError={(e) => {
@@ -168,11 +170,15 @@ export default function ProductCard({ product, index = 0 }) {
             {product.category}
           </span>
           <h3
-            className="product-title line-clamp-2 text-sm sm:text-base font-bold text-[#18201C] hover:text-[#073B2A] transition-colors leading-snug cursor-pointer mb-2"
-            onClick={() => openQuickView(product)}
+            className="product-title line-clamp-2 text-sm sm:text-base font-bold text-[#18201C] hover:text-[#073B2A] transition-colors leading-snug mb-2"
             title={product.name}
           >
-            {product.name}
+            <Link
+              href={`/products/${product.slug || product.productId || prodId}`}
+              className="hover:underline"
+            >
+              {product.name}
+            </Link>
           </h3>
 
           <div className="product-rating-row flex items-center gap-1.5 mb-2.5 text-xs">
@@ -290,4 +296,8 @@ export default function ProductCard({ product, index = 0 }) {
       </div>
     </motion.div>
   );
-}
+});
+
+ProductCard.displayName = "ProductCard";
+
+export default ProductCard;

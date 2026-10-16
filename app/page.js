@@ -1,62 +1,101 @@
-"use client";
+import HomeClient from "@/components/HomeClient";
+import { PRODUCTS } from "@/data/products";
+import { FAQS } from "@/data/faqs";
 
-import React from "react";
-import { ShopProvider } from "@/context/ShopContext";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import PriceStrip from "@/components/PriceStrip";
-import CategoryStrip from "@/components/CategoryStrip";
-import ProductGrid from "@/components/ProductGrid";
-import EditorialBanner from "@/components/EditorialBanner";
-import TrustPillars from "@/components/TrustPillars";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
-import WishlistDrawer from "@/components/WishlistDrawer";
-import QuickViewModal from "@/components/QuickViewModal";
-import CheckoutModal from "@/components/CheckoutModal";
-import PincodeModal from "@/components/PincodeModal";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import ToastContainer from "@/components/ToastContainer";
-import SplashScreen from "@/components/SplashScreen";
+export const metadata = {
+  title: "All Home Essentials at Just ₹99 in Jaipur | Griham 99+",
+  description:
+    "Ghar ke har zaroori items sirf ₹99 me. Jaipur me fastest free delivery. Explore 99+ kitchen storage, organizers, home decor & utility products at Griham 99+.",
+  keywords: [
+    "99 store Jaipur",
+    "home essentials under 99",
+    "kitchen storage 99 rupees",
+    "Griham 99",
+    "Griham 99+",
+    "Griham 99 Plus",
+    "99 store Tonk Phatak",
+    "Jaipur online shopping 99",
+  ],
+  alternates: {
+    canonical: "https://griham99.com",
+  },
+  openGraph: {
+    title: "All Home Essentials at Just ₹99 in Jaipur | Griham 99+",
+    description:
+      "Ghar ke har zaroori items sirf ₹99 me. Jaipur me free delivery. Kitchen storage, home decor and utility essentials at Griham 99+.",
+    url: "https://griham99.com",
+    type: "website",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://griham99.com/assets/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Griham 99+ - 99 Store Jaipur",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "All Home Essentials at Just ₹99 in Jaipur | Griham 99+",
+    description:
+      "Ghar ke har zaroori items sirf ₹99 me. Jaipur me fastest free delivery.",
+    images: ["https://griham99.com/assets/logo.svg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
-export default function Home() {
+export default function HomePage() {
+  // 1. Structured Data: ItemList schema for top featured products
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": PRODUCTS.slice(0, 10).map((product, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "item": {
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image,
+        "description": product.description,
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": "INR",
+          "availability": "https://schema.org/InStock",
+        },
+      },
+    })),
+  };
+
+  // 2. Structured Data: FAQPage schema for Google Search Rich Results
+  const faqPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQS.map((faq) => ({
+      "@type": "Question",
+      "name": faq.qEn,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.aEn,
+      },
+    })),
+  };
+
   return (
-    <ShopProvider>
-      {/* Luxury Initial Page Load Splash Screen */}
-      <SplashScreen minDuration={1800} />
-
-      <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#18201C]">
-        {/* Header (Announcement Bar, Sticky Nav, Live Search) */}
-        <Header />
-
-        {/* Main Storefront Flow */}
-        <main className="flex-1">
-          <Hero />
-          <PriceStrip />
-          <CategoryStrip />
-          <ProductGrid />
-          <EditorialBanner />
-          <TrustPillars />
-        </main>
-
-        {/* Store Footer */}
-        <Footer />
-
-        {/* Slide-In Drawers */}
-        <CartDrawer />
-        <WishlistDrawer />
-
-        {/* Interactive Modals */}
-        <QuickViewModal />
-        <CheckoutModal />
-        <PincodeModal />
-
-        {/* Floating WhatsApp Action Button */}
-        <WhatsAppButton />
-
-        {/* Toast Notifications */}
-        <ToastContainer />
-      </div>
-    </ShopProvider>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }}
+      />
+      <HomeClient />
+    </>
   );
 }

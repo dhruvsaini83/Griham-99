@@ -3,21 +3,43 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { PRODUCTS } from "@/data/products";
 import { sanitizeText } from "@/lib/validators";
+import { isValidAdminSecret } from "@/lib/security";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
 
 // POST /api/seed
-// Protected route to seed initial products into MongoDB
+// Hardened with strict timing-safe admin authorization and 10 req/min rate limiting
 export async function POST(request) {
   try {
-    // Protect seeding endpoint from unauthorized invocation in production
-    const adminKey = request.headers.get("x-admin-secret-key");
-    const configuredKey = process.env.ADMIN_SECRET_KEY || "griham_admin_secret_99";
-    const isDev = process.env.NODE_ENV !== "production";
-
-    if (!isDev && adminKey !== configuredKey) {
+    // 1. RATE LIMITING: 10 requests per minute per IP
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(`seed_${clientIp}`, 10, 60 * 1000);
+    if (!rateCheck.success) {
       return NextResponse.json(
         {
           success: false,
-          error: "Unauthorized: Seeding in production requires x-admin-secret-key header.",
+          error: "Too many seeding requests. Rate limit is 10 requests per minute.",
+          retryAfterMs: rateCheck.resetInMs,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": Math.ceil(rateCheck.resetInMs / 1000).toString(),
+          },
+        }
+      );
+    }
+
+    // 2. TIMING-SAFE ADMIN AUTHORIZATION CHECK (MANDATORY IN ALL ENVIRONMENTS)
+    const adminKey = request.headers.get("x-admin-secret-key");
+    const cookieToken = request.cookies.get("admin_auth")?.value;
+
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
+
+    if (!isAuthorized) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized: Valid x-admin-secret-key header or admin session is required.",
         },
         { status: 401 }
       );
@@ -27,8 +49,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "Please configure MONGODB_URI in your .env.local file before running database seed.",
+          error: "Database configuration missing. Please verify server environment variables.",
         },
         { status: 500 }
       );
@@ -81,14 +102,24 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error in /api/seed:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: "Database seeding failed: " + error.message },
       { status: 500 }
     );
   }
 }
 
+// Block GET from seeding or leaking instructions: Return 405 Method Not Allowed
 export async function GET() {
-  return NextResponse.json({
-    message: "POST to /api/seed with x-admin-secret-key header to seed database.",
-  });
+  return NextResponse.json(
+    {
+      success: false,
+      error: "Method Not Allowed. Database seeding requires authenticated POST request.",
+    },
+    {
+      status: 405,
+      headers: {
+        Allow: "POST",
+      },
+    }
+  );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useShop } from "@/context/ShopContext";
 
 const CATEGORIES_DATA = [
@@ -107,15 +108,30 @@ export default function CategoryStrip() {
           {CATEGORIES_DATA.map((cat) => (
             <div
               key={cat.id}
-              className="category-card shrink-0 snap-start w-[190px] sm:w-auto min-h-[44px]"
+              className="category-card shrink-0 snap-start w-[190px] sm:w-auto min-h-[44px] cursor-pointer"
               onClick={() => handleCategoryClick(cat.id)}
             >
               <div className="category-card-img-wrap">
-                <img src={cat.image} alt={cat.name} loading="lazy" />
+                <img
+                  src={cat.image}
+                  alt={`${cat.name} products at 99 rupees - Griham 99+`}
+                  loading="lazy"
+                />
               </div>
               <div className="category-card-body p-3">
-                <h3 className="category-card-title text-sm sm:text-base font-bold text-[#18201C]">{cat.name}</h3>
-                <span className="category-card-count text-xs text-stone-500">{cat.subtitle}</span>
+                <h3 className="category-card-title text-sm sm:text-base font-bold text-[#18201C]">
+                  {cat.name}
+                </h3>
+                <span className="category-card-count text-xs text-stone-500 block mb-1">
+                  {cat.subtitle}
+                </span>
+                <Link
+                  href={`/category/${cat.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-[11px] font-extrabold text-[#9A7B38] hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Explore Hub &rarr;</span>
+                </Link>
               </div>
             </div>
           ))}

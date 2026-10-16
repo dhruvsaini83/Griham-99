@@ -1,6 +1,7 @@
 import "./globals.css";
+
 export const viewport = {
-  themeColor: "#073B2A",
+  themeColor: "#FF6B00",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -9,24 +10,25 @@ export const viewport = {
 export const metadata = {
   metadataBase: new URL("https://griham99.com"),
   title: {
-    default: "गृहम 99+ | Griham 99+ — 99+ Product Varieties | Starting at ₹49",
+    default: "All Home & Kitchen Essentials at ₹99 in Jaipur | Griham 99+",
     template: "%s | Griham 99+",
   },
   description:
-    "Explore 99+ varieties of everyday essentials, useful finds, kitchenware, gifts, festive decor and more at Griham 99+. Affordable Indian retail shopping starting at just ₹49.",
+    "Ghar ke har zaroori items sirf ₹99 me. Jaipur me fastest free delivery. Explore 99+ kitchen storage, organizers, home decor & utility products at Griham 99+.",
   keywords: [
+    "99 store Jaipur",
+    "home essentials under 99",
+    "kitchen storage 99 rupees",
+    "Griham 99",
     "Griham 99+",
-    "गृहम 99",
-    "99 store India",
-    "everyday essentials",
-    "kitchenware starting at 49",
-    "home decor under 99",
-    "Indian retail store",
-    "Diwali diyas and lights",
-    "affordable home utility",
+    "Griham 99 Plus",
+    "99 store Tonk Phatak",
+    "Jaipur online shopping 99",
+    "kitchen organizers under 99",
+    "affordable home utility Jaipur",
   ],
   applicationName: "Griham 99+",
-  authors: [{ name: "Griham 99+ Retail" }],
+  authors: [{ name: "Griham 99+ Store Jaipur" }],
   creator: "Griham 99+",
   publisher: "Griham 99+",
   formatDetection: {
@@ -34,29 +36,80 @@ export const metadata = {
     email: true,
     address: true,
   },
+  alternates: {
+    canonical: "https://griham99.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
     alternateLocale: "hi_IN",
     url: "https://griham99.com",
-    title: "गृहम 99+ | Griham 99+ — Shop More. Save More. Starting at ₹49",
+    title: "All Home & Kitchen Essentials at ₹99 in Jaipur | Griham 99+",
     description:
-      "99+ product varieties of home, kitchen, beauty, gifts & utility essentials starting at ₹49. Express delivery & COD across India.",
+      "Ghar ke liye mazboot kitchen storage, daily essentials aur decor sirf ₹99 me. Jaipur me free delivery. Griham 99+ pe order karo.",
     siteName: "Griham 99+",
+    images: [
+      {
+        url: "https://griham99.com/assets/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Griham 99+ - All Home Essentials at ₹99 in Jaipur",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "गृहम 99+ | Griham 99+ — 99+ Varieties From ₹49",
+    title: "All Home & Kitchen Essentials at ₹99 in Jaipur | Griham 99+",
     description:
-      "Explore 99+ varieties of everyday essentials, kitchen finds & gifts starting at ₹49.",
+      "Ghar ke liye mazboot kitchen storage, daily essentials aur decor sirf ₹99 me. Jaipur me free delivery.",
+    images: ["https://griham99.com/assets/logo.svg"],
   },
   icons: {
     icon: [
       { url: "/assets/logo.svg", type: "image/svg+xml" },
-      { url: "/assets/logo.svg", sizes: "any" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
     shortcut: "/assets/logo.svg",
     apple: "/assets/logo.svg",
+  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://griham99.com/#organization",
+  name: "Griham 99+",
+  alternateName: ["Griham 99 Plus", "गृहम 99+ Store Jaipur"],
+  url: "https://griham99.com",
+  logo: "https://griham99.com/assets/logo.svg",
+  image: "https://griham99.com/assets/logo.svg",
+  telephone: "+919352456169",
+  email: "support@griham99.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak",
+    addressLocality: "Jaipur",
+    addressRegion: "Rajasthan",
+    postalCode: "302015",
+    addressCountry: "IN",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+919352456169",
+    contactType: "customer service",
+    areaServed: "IN",
+    availableLanguage: ["Hindi", "English"],
   },
 };
 
@@ -65,9 +118,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/assets/logo.svg" />
+        <link rel="alternate icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/assets/logo.svg" />
-        <meta name="theme-color" content="#073B2A" />
+        <meta name="theme-color" content="#FF6B00" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body>{children}</body>
     </html>

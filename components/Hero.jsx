@@ -33,6 +33,9 @@ export default function Hero() {
 
           {/* Staggered Word Fade-Up Headline */}
           <h1 className="hero-headline text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-black mb-3">
+            <span className="block text-base xs:text-lg sm:text-2xl md:text-3xl font-extrabold text-[#FCE59F] mb-1 tracking-wide">
+              All Home Essentials at Just ₹99 in Jaipur
+            </span>
             <span className="inline-block">
               {headlineWords1.map((word, i) => (
                 <motion.span

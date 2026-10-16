@@ -189,10 +189,10 @@ export default function Footer() {
             <div className="mt-4 p-3.5 rounded-xl bg-white/5 border border-[#C9A24A]/30 text-xs text-stone-200">
               <div className="text-[11px] uppercase tracking-wider text-[#FCE59F] font-bold mb-1 flex items-center gap-1.5">
                 <span>📍</span>
-                <span>{language === "hi" ? "जयपुर रिटेल स्टोर" : "Jaipur Retail Store"}</span>
+                <span>Griham 99+ Store Jaipur • Free delivery in Jaipur</span>
               </div>
               <p className="text-stone-300 leading-relaxed text-[11px] sm:text-xs">
-                {siteConfig.address.fullAddress}
+                Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak, Jaipur, Rajasthan 302015 (Serving 302012, 302015 & all Jaipur).
               </p>
               <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:gap-3">
                 <a
@@ -233,67 +233,39 @@ export default function Footer() {
             </h4>
             <ul className="footer-links-list">
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("kitchen")}
-                >
-                  Kitchen & Dining
-                </a>
+                <Link href="/category/kitchen" className="footer-link">
+                  Kitchen & Dining Under ₹99
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("home")}
-                >
+                <Link href="/category/home" className="footer-link">
                   Home Essentials & Lights
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("beauty")}
-                >
+                <Link href="/category/beauty" className="footer-link">
                   Beauty & Personal Care
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("gifts")}
-                >
+                <Link href="/category/gifts" className="footer-link">
                   Gifts & Festive Diyas
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("storage")}
-                >
-                  Storage & Jars
-                </a>
+                <Link href="/category/storage" className="footer-link">
+                  Storage Boxes & Organizers
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={() => handleCategoryNav("toys")}
-                >
+                <Link href="/category/toys" className="footer-link">
                   Toys & Kids Items
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#catalog"
-                  className="footer-link"
-                  onClick={handlePriceUnder99}
-                >
-                  🔥 Finds Under ₹99 Store
-                </a>
+                <Link href="/category/utility" className="footer-link">
+                  Everyday Utility Finds
+                </Link>
               </li>
             </ul>
           </div>

@@ -80,14 +80,14 @@ export default function SplashScreen({ minDuration = 1800 }) {
             </motion.div>
 
             {/* Brand Title */}
-            <motion.h1
+            <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-2xl sm:text-3xl font-royal tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FDE6A6] via-[#D4AF37] to-[#F4D068] font-black uppercase mb-1 drop-shadow-sm"
             >
               GRIHAM 99+
-            </motion.h1>
+            </motion.div>
 
             <motion.p
               initial={{ y: 8, opacity: 0 }}
