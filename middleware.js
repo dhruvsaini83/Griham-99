@@ -141,13 +141,10 @@ export function middleware(request) {
     const adminKeyHeader = request.headers.get("x-admin-secret-key");
     const configuredSecret = process.env.ADMIN_SECRET_KEY || "griham_admin_secret_99";
 
-    // Timing-safe authorization check
+    // Timing-safe authorization check against HttpOnly session token or API header
     const isAuthorized =
-      adminAuthCookie === "true" ||
-      adminSessionToken === "true" ||
-      timingSafeEqualStr(adminAuthCookie, configuredSecret) ||
-      timingSafeEqualStr(adminSessionToken, configuredSecret) ||
-      timingSafeEqualStr(adminKeyHeader, configuredSecret);
+      (adminSessionToken && timingSafeEqualStr(adminSessionToken, configuredSecret)) ||
+      (adminKeyHeader && timingSafeEqualStr(adminKeyHeader, configuredSecret));
 
     if (!isAuthorized) {
       if (pathname.startsWith("/api/")) {

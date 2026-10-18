@@ -93,6 +93,10 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
+// High-performance query indexes
+ProductSchema.index({ category: 1 });
+ProductSchema.index({ name: "text", description: "text" });
+
 // Virtual for id to ensure compatibility with frontend `product.id`
 ProductSchema.virtual("id").get(function () {
   return this.productId || this._id.toString();

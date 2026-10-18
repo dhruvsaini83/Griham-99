@@ -6,6 +6,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
@@ -45,7 +49,7 @@ const nextConfig = {
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            value: "camera=(self), microphone=(), geolocation=()",
           },
           {
             key: "Content-Security-Policy",
@@ -54,8 +58,8 @@ const nextConfig = {
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: blob: https:",
-              "connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://wa.me",
+              "img-src 'self' data: blob: https: res.cloudinary.com",
+              "connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://wa.me https://api.cloudinary.com",
               "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://www.google.com https://maps.google.com",
             ].join("; "),
           },

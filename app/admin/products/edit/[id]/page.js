@@ -50,7 +50,7 @@ export default function EditProductPage() {
       setErrorMessage("");
       try {
         const res = await fetch(`/api/admin/products/${productId}`, {
-          headers: { "x-admin-secret-key": "griham_admin_secret_99" },
+          credentials: "include",
         });
         const data = await res.json();
 
@@ -106,7 +106,7 @@ export default function EditProductPage() {
 
         const res = await fetch("/api/admin/upload", {
           method: "POST",
-          headers: { "x-admin-secret-key": "griham_admin_secret_99" },
+          credentials: "include",
           body: formData,
         });
 
@@ -170,9 +170,9 @@ export default function EditProductPage() {
 
       const res = await fetch(`/api/admin/products/${productId}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-secret-key": "griham_admin_secret_99",
         },
         body: JSON.stringify(payload),
       });

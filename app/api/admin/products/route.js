@@ -10,8 +10,8 @@ import cloudinary from "@/lib/cloudinary";
 export async function GET(request) {
   try {
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(
@@ -71,8 +71,8 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(

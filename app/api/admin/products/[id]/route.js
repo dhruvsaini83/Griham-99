@@ -19,8 +19,8 @@ function buildIdQuery(idParam) {
 export async function GET(request, { params }) {
   try {
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(
@@ -53,8 +53,8 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(
@@ -192,8 +192,8 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(

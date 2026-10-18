@@ -97,8 +97,8 @@ export async function POST(request) {
   try {
     // 1. ADMIN AUTHORIZATION CHECK (TIMING-SAFE)
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieToken = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(

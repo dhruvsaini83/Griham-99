@@ -31,9 +31,9 @@ export async function POST(request) {
 
     // 2. TIMING-SAFE ADMIN AUTHORIZATION CHECK (MANDATORY IN ALL ENVIRONMENTS)
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieToken = request.cookies.get("admin_auth")?.value;
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
 
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(

@@ -379,7 +379,7 @@ export default function AdminProductsPage() {
 
       {/* Products Table: Desktop & Tablet View (>= 768px) */}
       {!loading && !error && filteredProducts.length > 0 && (
-        <div className="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+        <div className="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/80 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">

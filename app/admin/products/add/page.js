@@ -20,7 +20,6 @@ export default function AddProductPage() {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
-  // Form states
   const [name, setName] = useState("");
   const [price, setPrice] = useState(99);
   const [originalPrice, setOriginalPrice] = useState(199);
@@ -31,19 +30,16 @@ export default function AddProductPage() {
   const [images, setImages] = useState([]);
   const [manualImageUrl, setManualImageUrl] = useState("");
 
-  // UI states
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successToast, setSuccessToast] = useState("");
 
-  // Calculate discount percentage
   const discountPercent =
     originalPrice && originalPrice > price
       ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : 0;
 
-  // Image Upload Handler
   const handleFileUpload = async (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -59,9 +55,7 @@ export default function AddProductPage() {
 
         const res = await fetch("/api/admin/upload", {
           method: "POST",
-          headers: {
-            "x-admin-secret-key": "griham_admin_secret_99",
-          },
+          credentials: "include",
           body: formData,
         });
 
@@ -73,12 +67,15 @@ export default function AddProductPage() {
         if (data.url) {
           setImages((prev) => [...prev, data.url]);
         }
+        if (data.urls && data.urls.length > 1) {
+          const extra = data.urls.filter((u) => u !== data.url);
+          if (extra.length) setImages((prev) => [...prev, ...extra]);
+        }
       }
     } catch (err) {
       setErrorMessage("Upload Error: " + err.message);
     } finally {
       setIsUploading(false);
-      // Reset input values so same file can be re-selected if needed
       if (cameraInputRef.current) cameraInputRef.current.value = "";
       if (galleryInputRef.current) galleryInputRef.current.value = "";
     }
@@ -126,9 +123,9 @@ export default function AddProductPage() {
 
       const res = await fetch("/api/admin/products", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-secret-key": "griham_admin_secret_99",
         },
         body: JSON.stringify(payload),
       });
@@ -141,7 +138,6 @@ export default function AddProductPage() {
 
       setSuccessToast("Badhai! Naya product safaltapoorvak jud gaya! 🎉");
 
-      // Redirect to products list after short delay for user feedback
       setTimeout(() => {
         router.push("/admin/products");
         router.refresh();
@@ -154,7 +150,6 @@ export default function AddProductPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Toast Alert */}
       {successToast && (
         <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-sm font-bold animate-in slide-in-from-top-4">
           <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,7 +159,6 @@ export default function AddProductPage() {
         </div>
       )}
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link
@@ -186,7 +180,6 @@ export default function AddProductPage() {
         </div>
       </div>
 
-      {/* Error Banner */}
       {errorMessage && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-xs sm:text-sm font-medium flex items-start gap-2.5">
           <svg className="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -198,17 +191,13 @@ export default function AddProductPage() {
         </div>
       )}
 
-      {/* Main Form */}
       <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-gray-200/90 shadow-sm p-5 sm:p-7 space-y-6">
-        {/* Section 1: Photos (Most Important for Retailer Mobile) */}
         <div>
           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
             Product Photos (फोटो खींचें या अपलोड करें) <span className="text-red-500">*</span>
           </label>
 
-          {/* Action Buttons: Camera + Gallery */}
           <div className="grid grid-cols-2 gap-3 mb-4">
-            {/* Native Camera Capture Button */}
             <input
               type="file"
               accept="image/*"
@@ -230,7 +219,6 @@ export default function AddProductPage() {
               <span>Photo Kheencho 📸</span>
             </button>
 
-            {/* Gallery File Upload Button */}
             <input
               type="file"
               accept="image/*"
@@ -248,11 +236,10 @@ export default function AddProductPage() {
               <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>Gallery Se Upload 🖼️</span>
+              <span>Gallery Se Upload 🖼</span>
             </button>
           </div>
 
-          {/* Uploading Spinner */}
           {isUploading && (
             <div className="p-3 bg-orange-50 border border-orange-200 rounded-xl text-[#FF6B00] text-xs font-bold flex items-center justify-center gap-2 animate-pulse mb-3">
               <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -263,7 +250,6 @@ export default function AddProductPage() {
             </div>
           )}
 
-          {/* Image Previews */}
           {images.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
               {images.map((img, idx) => (
@@ -273,7 +259,7 @@ export default function AddProductPage() {
                 >
                   <img src={img} alt={`Upload ${idx + 1}`} className="w-full h-full object-cover" />
                   {idx === 0 && (
-                    <span className="absolute top-1 left-1 bg-[#FF6B00] text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                    <span className="absolute top-1 left-1 bg-[#FF6B00] text-white text- font-black px-1.5 py-0.5 rounded shadow">
                       Main Photo
                     </span>
                   )}
@@ -293,7 +279,6 @@ export default function AddProductPage() {
             </p>
           )}
 
-          {/* Manual URL fallback */}
           <div className="mt-3 flex gap-2">
             <input
               type="url"
@@ -305,14 +290,13 @@ export default function AddProductPage() {
             <button
               type="button"
               onClick={handleAddManualUrl}
-              className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-bold text-gray-700 min-h-[40px]"
+              className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-bold text-gray-700 min-h-"
             >
               + Add Link
             </button>
           </div>
         </div>
 
-        {/* Section 2: Product Name */}
         <div>
           <label htmlFor="pname" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
             Product Ka Naam (सामान का नाम) <span className="text-red-500">*</span>
@@ -328,16 +312,13 @@ export default function AddProductPage() {
           />
         </div>
 
-        {/* Section 3: Pricing & MRP */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label htmlFor="pprice" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
               Daam / Price (₹) <span className="text-[#FF6B00] font-bold">(Flat 99)</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold text-gray-500">
-                ₹
-              </span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold text-gray-500">₹</span>
               <input
                 id="pprice"
                 type="number"
@@ -348,7 +329,7 @@ export default function AddProductPage() {
                 className="w-full h-12 pl-8 pr-3 rounded-xl bg-orange-50/50 border border-orange-200 text-base font-black text-[#FF6B00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6B00]"
               />
             </div>
-            <p className="text-[10px] text-gray-400 mt-1">Default 99 for all Griham items</p>
+            <p className="text- text-gray-400 mt-1">Default 99 for all Griham items</p>
           </div>
 
           <div>
@@ -356,9 +337,7 @@ export default function AddProductPage() {
               Asli Daam / MRP (₹)
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold text-gray-400">
-                ₹
-              </span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold text-gray-400">₹</span>
               <input
                 id="pmrp"
                 type="number"
@@ -370,14 +349,11 @@ export default function AddProductPage() {
               />
             </div>
             {discountPercent > 0 && (
-              <p className="text-[10px] text-emerald-600 font-bold mt-1">
-                {discountPercent}% OFF customer ko dikhega!
-              </p>
+              <p className="text- text-emerald-600 font-bold mt-1">{discountPercent}% OFF customer ko dikhega!</p>
             )}
           </div>
         </div>
 
-        {/* Section 4: Category & Stock */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label htmlFor="pcat" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
@@ -412,28 +388,17 @@ export default function AddProductPage() {
           </div>
         </div>
 
-        {/* Section 5: Bestseller Toggle */}
         <div className="bg-amber-50/60 border border-amber-200 rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <span className="font-bold text-sm text-gray-900 block">
-              Bestseller Tag (क्या ये सबसे ज्यादा बिकने वाला है?)
-            </span>
-            <span className="text-xs text-gray-500">
-              Customer website ke homepage pe Bestseller section me highlight hoga.
-            </span>
+            <span className="font-bold text-sm text-gray-900 block">Bestseller Tag (क्या ये सबसे ज्यादा बिकने वाला है?)</span>
+            <span className="text-xs text-gray-500">Customer website ke homepage pe Bestseller section me highlight hoga.</span>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer min-h-[44px]">
-            <input
-              type="checkbox"
-              checked={bestseller}
-              onChange={(e) => setBestseller(e.target.checked)}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[12px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF6B00]"></div>
+          <label className="relative inline-flex items-center cursor-pointer min-h-">
+            <input type="checkbox" checked={bestseller} onChange={(e) => setBestseller(e.target.checked)} className="sr-only peer" />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top- after:left- after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF6B00]"></div>
           </label>
         </div>
 
-        {/* Section 6: Description */}
         <div>
           <label htmlFor="pdesc" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
             Product Ki Jankari (Description)
@@ -448,11 +413,10 @@ export default function AddProductPage() {
           ></textarea>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting || isUploading}
-          className="w-full h-14 min-h-[52px] bg-gradient-to-r from-[#FF6B00] to-[#E05300] hover:from-[#E05300] hover:to-[#C94700] text-white font-black text-lg rounded-2xl shadow-xl shadow-orange-500/25 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full h-14 min-h- bg-gradient-to-r from-[#FF6B00] to-[#E05300] hover:from-[#E05300] hover:to-[#C94700] text-white font-black text-lg rounded-2xl shadow-xl shadow-orange-500/25 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>
@@ -460,7 +424,7 @@ export default function AddProductPage() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>MongoDB me Save Ho Raha Hai...</span>
+              <span>【entity-MongoDB¦canonical_name=MongoDB】 me Save Ho Raha Hai...</span>
             </>
           ) : (
             <>

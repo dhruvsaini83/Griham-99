@@ -8,8 +8,8 @@ export async function POST(request) {
   try {
     // 1. Admin Authentication Check
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieAuth = request.cookies.get("admin_auth")?.value;
-    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieAuth);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAuthorized = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     if (!isAuthorized) {
       return NextResponse.json(

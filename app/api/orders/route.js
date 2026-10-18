@@ -243,8 +243,8 @@ export async function GET(request) {
 
     // 2. Authorization Check
     const adminKey = request.headers.get("x-admin-secret-key");
-    const cookieToken = request.cookies.get("admin_auth")?.value;
-    const isAdmin = isValidAdminSecret(adminKey) || isValidAdminSecret(cookieToken);
+    const sessionToken = request.cookies.get("admin_session_token")?.value;
+    const isAdmin = isValidAdminSecret(adminKey) || isValidAdminSecret(sessionToken);
 
     const { searchParams } = new URL(request.url);
     const orderIdParam = searchParams.get("orderId");
