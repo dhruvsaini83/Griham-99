@@ -92,8 +92,11 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
               <img
                 src={getOptimizedImageUrl(allImages[activeIndex] || currentImage, 800)}
                 alt={`${product.name} at 99 rupees - Griham 99+`}
+                width={800}
+                height={800}
                 fetchPriority="high"
                 loading="eager"
+                decoding="async"
                 className="w-full h-full object-contain p-2"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
@@ -172,7 +175,11 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
                     <img
                       src={getOptimizedImageUrl(img, 120)}
                       alt={`${product.name} thumbnail ${idx + 1}`}
+                      width={64}
+                      height={64}
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.onerror = null;

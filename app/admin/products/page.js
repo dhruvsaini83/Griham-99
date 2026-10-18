@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
@@ -279,10 +280,13 @@ export default function AdminProductsPage() {
                   <div className="w-20 h-20 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0 relative border border-gray-200">
                     {p.image ? (
                       <img
-                        src={p.image}
+                        src={getOptimizedImageUrl(p.image, 160)}
                         alt={p.name}
+                        width={80}
+                        height={80}
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">
@@ -404,10 +408,13 @@ export default function AdminProductsPage() {
                       <div className="w-14 h-14 rounded-xl bg-gray-100 overflow-hidden relative border border-gray-200">
                         {p.image ? (
                           <img
-                            src={p.image}
+                            src={getOptimizedImageUrl(p.image, 120)}
                             alt={p.name}
+                            width={56}
+                            height={56}
                             className="w-full h-full object-cover"
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">

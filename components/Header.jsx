@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
 import { siteConfig } from "@/lib/config";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 const TICKER_MESSAGES = [
   "✨ 99+ Product Varieties across Home, Kitchen & Gifts — Starting at ₹49!",
@@ -378,8 +379,12 @@ export default function Header() {
                         onClick={() => handleSelectProduct(item)}
                       >
                         <img
-                          src={item.image}
+                          src={getOptimizedImageUrl(item.image, 100)}
                           alt={item.name}
+                          width={40}
+                          height={40}
+                          loading="lazy"
+                          decoding="async"
                           className="w-10 h-10 object-cover rounded bg-stone-100 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
@@ -542,7 +547,15 @@ export default function Header() {
                         setIsMobileSearchOpen(false);
                       }}
                     >
-                      <img src={item.image} alt={item.name} className="w-8 h-8 rounded object-cover" />
+                      <img
+                        src={getOptimizedImageUrl(item.image, 100)}
+                        alt={item.name}
+                        width={32}
+                        height={32}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-8 h-8 rounded object-cover"
+                      />
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-bold text-stone-800 truncate">{item.name}</div>
                         <div className="text-[10px] text-stone-500">₹{item.price} • {item.category}</div>

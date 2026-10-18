@@ -32,7 +32,7 @@ export default function HomeClient() {
   return (
     <ShopProvider>
       {/* Luxury Initial Page Load Splash Screen */}
-      <SplashScreen minDuration={1800} />
+      <SplashScreen minDuration={800} />
 
       <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#18201C]">
         {/* Header (Announcement Bar, Sticky Nav, Live Search) */}

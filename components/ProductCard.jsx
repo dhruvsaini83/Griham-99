@@ -76,7 +76,7 @@ const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }
   return (
     <motion.div
       ref={ref}
-      layout
+      style={{ willChange: "transform" }}
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -101,6 +101,7 @@ const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }
             height={400}
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
             className="product-card-img w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
             onError={(e) => {
               e.currentTarget.onerror = null;

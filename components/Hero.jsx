@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 export default function Hero() {
   const { language } = useShop();
@@ -196,26 +197,38 @@ export default function Hero() {
           <div className="hero-collage-grid">
             <div className="hero-collage-item featured overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&w=800&q=80"
+                src={getOptimizedImageUrl("https://images.unsplash.com/photo-1605647540924-852290f6b0d5", 800)}
                 alt="Festive Brass Diya and Home Decor"
+                width={800}
+                height={600}
                 loading="eager"
-                className="hover:scale-105 transition-transform duration-700 ease-out"
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
             <div className="hero-collage-item overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80"
+                src={getOptimizedImageUrl("https://images.unsplash.com/photo-1596040033229-a9821ebd058d", 400)}
                 alt="Stainless Steel Kitchen Organizer"
+                width={400}
+                height={300}
                 loading="lazy"
-                className="hover:scale-105 transition-transform duration-700 ease-out"
+                fetchPriority="low"
+                decoding="async"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
             <div className="hero-collage-item overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=500&q=80"
+                src={getOptimizedImageUrl("https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec", 400)}
                 alt="Ayurvedic Soap & Personal Care"
+                width={400}
+                height={300}
                 loading="lazy"
-                className="hover:scale-105 transition-transform duration-700 ease-out"
+                fetchPriority="low"
+                decoding="async"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
           </div>

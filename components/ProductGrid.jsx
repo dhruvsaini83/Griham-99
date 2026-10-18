@@ -119,7 +119,6 @@ export default function ProductGrid() {
           </div>
         ) : (
           <motion.div
-            layout
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
