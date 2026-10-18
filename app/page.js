@@ -87,6 +87,12 @@ export default function HomePage() {
 
   return (
     <>
+      <link
+        rel="preload"
+        as="image"
+        href="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&w=1200&q=75"
+        fetchPriority="high"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}

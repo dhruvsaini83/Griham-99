@@ -197,10 +197,10 @@ export default function Hero() {
           <div className="hero-collage-grid">
             <div className="hero-collage-item featured overflow-hidden">
               <img
-                src={getOptimizedImageUrl("https://images.unsplash.com/photo-1605647540924-852290f6b0d5", 800)}
+                src={getOptimizedImageUrl("https://images.unsplash.com/photo-1605647540924-852290f6b0d5", 1200)}
                 alt="Festive Brass Diya and Home Decor"
-                width={800}
-                height={600}
+                width={1200}
+                height={800}
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
