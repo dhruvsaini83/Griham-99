@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
@@ -49,7 +50,7 @@ const CATEGORY_SEO_DATA = {
   },
 };
 
-async function fetchCategoryProducts(catKey) {
+const fetchCategoryProducts = cache(async (catKey) => {
   let products = [];
   try {
     if (process.env.MONGODB_URI) {
@@ -69,7 +70,7 @@ async function fetchCategoryProducts(catKey) {
   }
 
   return products;
-}
+});
 
 export async function generateMetadata({ params }) {
   const catKey = (params.slug || "").toLowerCase().trim();
