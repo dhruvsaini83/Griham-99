@@ -10,6 +10,7 @@
     "seed": "node scripts/seed.js"
   },
   "dependencies": {
+    "cloudinary": "^2.11.0",
     "framer-motion": "^14.2.0",
     "mongoose": "^9.11.2",
     "next": "14.2.35",

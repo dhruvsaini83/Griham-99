@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { isValidAdminSecret, sanitizeNoSql } from "@/lib/security";
 import { sanitizeText } from "@/lib/validators";
+import cloudinary from "@/lib/cloudinary";
 
 function buildIdQuery(idParam) {
   if (!isNaN(Number(idParam))) {
@@ -63,7 +64,75 @@ export async function PUT(request, { params }) {
     }
 
     await connectToDatabase();
-    const rawBody = await request.json().catch(() => ({}));
+
+    const contentType = request.headers.get("content-type") || "";
+    let rawBody = {};
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      let files = formData.getAll("images");
+      if (!files || files.length === 0) {
+        files = formData.getAll("file");
+      }
+      if (!files || files.length === 0) {
+        const single = formData.get("file") || formData.get("image");
+        if (single && typeof single !== "string") {
+          files = [single];
+        }
+      }
+
+      const uploadedUrls = [];
+      const validFiles = (files || []).filter((f) => f && typeof f !== "string" && f.size > 0);
+
+      if (validFiles.length > 0) {
+        if (
+          !process.env.CLOUDINARY_CLOUD_NAME ||
+          !process.env.CLOUDINARY_API_KEY ||
+          !process.env.CLOUDINARY_API_SECRET ||
+          process.env.CLOUDINARY_CLOUD_NAME === "demo" ||
+          process.env.CLOUDINARY_API_KEY === "demo" ||
+          process.env.CLOUDINARY_API_SECRET === "demo"
+        ) {
+          return NextResponse.json(
+            { success: false, error: "Cloudinary not configured" },
+            { status: 500 }
+          );
+        }
+
+        for (const file of validFiles) {
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          const base64 = `data:${file.type || "image/jpeg"};base64,${buffer.toString("base64")}`;
+          const result = await cloudinary.uploader.upload(base64, {
+            folder: "griham-99/products",
+            resource_type: "auto",
+          });
+          if (result && result.secure_url) {
+            uploadedUrls.push(result.secure_url);
+          }
+        }
+      }
+
+      formData.forEach((value, key) => {
+        if (key !== "file" && key !== "images") {
+          if (key === "price" || key === "originalPrice" || key === "stock") {
+            rawBody[key] = value !== "" ? Number(value) : undefined;
+          } else if (key === "bestseller") {
+            rawBody[key] = value === "true" || value === true;
+          } else {
+            rawBody[key] = value;
+          }
+        }
+      });
+
+      if (uploadedUrls.length > 0) {
+        rawBody.image = uploadedUrls[0];
+        rawBody.images = uploadedUrls;
+      }
+    } else {
+      rawBody = await request.json().catch(() => ({}));
+    }
+
     const data = sanitizeNoSql(rawBody);
 
     const query = buildIdQuery(params.id);
