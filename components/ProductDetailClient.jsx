@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShopProvider, useShop } from "@/context/ShopContext";
@@ -15,18 +15,35 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import ToastContainer from "@/components/ToastContainer";
 import ProductCard from "@/components/ProductCard";
 import { siteConfig } from "@/lib/config";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 function ProductDetailContent({ product, relatedProducts = [] }) {
   const { addToCart, isInWishlist, toggleWishlist, language, showToast } = useShop();
   const [added, setAdded] = useState(false);
-  const [activeImage, setActiveImage] = useState(product.image);
+
+  // 1. DATA: Combine product.image and product.images, remove duplicates
+  const allImages = Array.from(
+    new Set([product.image, ...(product.images || [])].filter(Boolean))
+  );
+  if (allImages.length === 0) {
+    allImages.push(
+      "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=600&q=80"
+    );
+  }
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Reset active index when product id changes
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [product.id, product.productId, product._id]);
+
+  const currentImage = allImages[activeIndex] || allImages[0];
 
   const prodId = product.id ?? product.productId ?? product._id;
   const inWishlist = isInWishlist(prodId);
   const savings = (product.originalPrice || 99) - product.price;
   const discountPct = Math.round((savings / (product.originalPrice || 99)) * 100);
-
-  const images = product.images && product.images.length > 0 ? product.images : [product.image];
 
   const handleAddToCart = () => {
     addToCart(product, 1);
@@ -68,47 +85,100 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
 
         {/* Product Hero Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 bg-white rounded-3xl p-5 sm:p-8 border border-[#E7E1D5] shadow-sm mb-12">
-          {/* LEFT: Image Gallery (lg:col-span-6) */}
-          <div className="lg:col-span-6 flex flex-col gap-4">
-            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#F4EFE6] border border-[#E7E1D5]">
+          {/* LEFT: Amazon / Flipkart Style Image Gallery (lg:col-span-6) WITHOUT Zoom */}
+          <div className="lg:col-span-6 flex flex-col">
+            {/* Main Image */}
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm flex items-center justify-center">
               <img
-                src={activeImage}
+                src={getOptimizedImageUrl(allImages[activeIndex] || currentImage, 800)}
                 alt={`${product.name} at 99 rupees - Griham 99+`}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                fetchPriority="high"
+                loading="eager"
+                className="w-full h-full object-contain p-2"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src =
-                    "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=600&q=80";
+                    "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=800&q=75";
                 }}
               />
+
+              {/* Discount / Price / Bestseller Badges */}
               <div className="absolute top-3 left-3 flex flex-col gap-1 z-10 pointer-events-none">
                 <span className="bg-[#073B2A] text-[#FCE59F] text-xs font-black px-2.5 py-1 rounded shadow">
-                  ₹{product.price} GUARANTEED
+                  ₹{product.price} FLAT
                 </span>
                 {discountPct > 0 && (
                   <span className="bg-[#C83214] text-white text-[11px] font-extrabold px-2 py-0.5 rounded shadow">
                     {discountPct}% OFF
                   </span>
                 )}
+                {product.bestseller && (
+                  <span className="bg-[#FF6B00] text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow">
+                    ★ BESTSELLER
+                  </span>
+                )}
               </div>
+
+              {/* Image Counter Badge on Top-Right */}
+              {allImages.length > 1 && (
+                <span className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full font-bold pointer-events-none z-10">
+                  {activeIndex + 1}/{allImages.length}
+                </span>
+              )}
+
+              {/* Next / Prev Navigation Arrows */}
+              {allImages.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveIndex((prev) =>
+                        prev === 0 ? allImages.length - 1 : prev - 1
+                      )
+                    }
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
+                    aria-label="Previous image"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveIndex((prev) => (prev + 1) % allImages.length)
+                    }
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
+                    aria-label="Next image"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Thumbnail selector if multiple images */}
-            {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {images.map((img, idx) => (
+            {/* Thumbnails Row (Desktop & Mobile) - Centered */}
+            {allImages.length > 1 && (
+              <div className="flex gap-2.5 mt-3 justify-center overflow-x-auto scrollbar-none pb-2">
+                {allImages.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setActiveImage(img)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImage === img ? "border-[#073B2A] scale-95" : "border-transparent opacity-70 hover:opacity-100"
+                    onClick={() => setActiveIndex(idx)}
+                    className={`w-16 h-16 rounded-lg overflow-hidden border-2 cursor-pointer flex-shrink-0 transition-all duration-200 bg-white ${
+                      activeIndex === idx
+                        ? "border-[#FF6B00] shadow-sm"
+                        : "border-gray-200 opacity-70 hover:opacity-100"
                     }`}
                   >
                     <img
-                      src={img}
-                      alt={`${product.name} thumbnail ${idx + 1} at 99 rupees - Griham 99+`}
+                      src={getOptimizedImageUrl(img, 120)}
+                      alt={`${product.name} thumbnail ${idx + 1}`}
+                      loading="lazy"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src =
+                          "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=120&q=75";
+                      }}
                     />
                   </button>
                 ))}

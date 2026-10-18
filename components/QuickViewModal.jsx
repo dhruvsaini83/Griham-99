@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
 import { siteConfig } from "@/lib/config";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 const STORE_WHATSAPP_NUMBER = siteConfig.whatsappNumber;
 
@@ -132,14 +133,18 @@ export default function QuickViewModal() {
               <div className="modal-gallery">
                 <div className="modal-main-img-wrap rounded-xl overflow-hidden bg-[#F4EFE6] aspect-square flex items-center justify-center">
                   <img
-                    src={p.image}
+                    src={getOptimizedImageUrl(p.image, 600)}
                     alt={p.name}
                     id="modalMainImg"
+                    width={600}
+                    height={600}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src =
-                        "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=600&q=80";
+                        "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=600&q=75";
                     }}
                   />
                 </div>

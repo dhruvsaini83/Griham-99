@@ -3,6 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false, // Prevents X-Powered-By: Next.js fingerprinting
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       {
         protocol: "https",

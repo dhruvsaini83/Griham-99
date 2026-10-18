@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { siteConfig } from "@/lib/config";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 const STORE_WHATSAPP_NUMBER = siteConfig.whatsappNumber;
 
@@ -208,25 +210,42 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <AnimatePresence initial={false}>
-                  {cart.map((item) => (
-                    <motion.div
-                      layout
-                      key={item.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20, height: 0, marginBottom: 0 }}
-                      transition={{ duration: 0.28, ease: "easeOut" }}
-                      className="cart-item flex gap-3.5 py-3 border-b border-[#E7E1D5]"
-                    >
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="cart-item-thumb w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover bg-[#F4EFE6] shrink-0"
-                      />
-                      <div className="cart-item-details flex-1 min-w-0">
-                        <div className="cart-item-name font-bold text-sm sm:text-base text-[#18201C] line-clamp-1 break-words">
-                          {item.name}
-                        </div>
+                  {cart.map((item) => {
+                    const productHref = `/products/${item.slug || item._id || item.id}`;
+                    return (
+                      <motion.div
+                        layout
+                        key={item.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20, height: 0, marginBottom: 0 }}
+                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        className="cart-item flex gap-3.5 py-3 border-b border-[#E7E1D5]"
+                      >
+                        <Link
+                          href={productHref}
+                          onClick={() => setIsCartOpen(false)}
+                          className="shrink-0 cursor-pointer block rounded-lg overflow-hidden group"
+                          aria-label={`View details for ${item.name}`}
+                        >
+                          <img
+                            src={getOptimizedImageUrl(item.image, 160)}
+                            alt={item.name}
+                            width={80}
+                            height={80}
+                            loading="lazy"
+                            decoding="async"
+                            className="cart-item-thumb w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover bg-[#F4EFE6] group-hover:opacity-90 transition-opacity"
+                          />
+                        </Link>
+                        <div className="cart-item-details flex-1 min-w-0">
+                          <Link
+                            href={productHref}
+                            onClick={() => setIsCartOpen(false)}
+                            className="cart-item-name font-bold text-sm sm:text-base text-[#18201C] line-clamp-1 break-words hover:text-[#FF6B00] hover:underline cursor-pointer transition-colors block"
+                          >
+                            {item.name}
+                          </Link>
                         <div className="cart-item-price-unit text-xs sm:text-sm text-[#073B2A] font-bold mt-0.5">
                           ₹{item.price}{" "}
                           <span
@@ -298,7 +317,8 @@ export default function CartDrawer() {
                         </div>
                       </div>
                     </motion.div>
-                  ))}
+                  );
+                })}
                 </AnimatePresence>
               )}
             </div>

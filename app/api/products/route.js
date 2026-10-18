@@ -31,40 +31,41 @@ export async function GET(request) {
 
     await connectToDatabase();
 
-    const count = await Product.countDocuments();
+    // Auto-seed only if explicitly enabled via AUTO_SEED env var (bypasses redundant countDocuments on every request)
+    if (process.env.AUTO_SEED === "true") {
+      const count = await Product.countDocuments();
+      if (count === 0) {
+        const seedItems = PRODUCTS.map((item) => ({
+          productId: item.id,
+          name: sanitizeText(item.name),
+          slug:
+            item.name
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)+/g, "") +
+            "-" +
+            item.id,
+          price: item.price,
+          originalPrice: item.originalPrice,
+          discount: Math.round(
+            ((item.originalPrice - item.price) / item.originalPrice) * 100
+          ),
+          category: item.category.toLowerCase().trim(),
+          image: item.image,
+          images: [item.image],
+          rating: item.rating,
+          reviews: item.reviews,
+          stock: 50,
+          isBestseller: Boolean(item.bestseller),
+          bestseller: Boolean(item.bestseller),
+          isNew: Boolean(item.isNew),
+          tag: item.tag || "",
+          description: item.description || "",
+          specs: item.specs || {},
+        }));
 
-    // Auto-seed if database is completely empty
-    if (count === 0) {
-      const seedItems = PRODUCTS.map((item) => ({
-        productId: item.id,
-        name: sanitizeText(item.name),
-        slug:
-          item.name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/(^-|-$)+/g, "") +
-          "-" +
-          item.id,
-        price: item.price,
-        originalPrice: item.originalPrice,
-        discount: Math.round(
-          ((item.originalPrice - item.price) / item.originalPrice) * 100
-        ),
-        category: item.category.toLowerCase().trim(),
-        image: item.image,
-        images: [item.image],
-        rating: item.rating,
-        reviews: item.reviews,
-        stock: 50,
-        isBestseller: Boolean(item.bestseller),
-        bestseller: Boolean(item.bestseller),
-        isNew: Boolean(item.isNew),
-        tag: item.tag || "",
-        description: item.description || "",
-        specs: item.specs || {},
-      }));
-
-      await Product.insertMany(seedItems);
+        await Product.insertMany(seedItems);
+      }
     }
 
     const products = await Product.find({})

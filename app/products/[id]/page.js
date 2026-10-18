@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
@@ -7,7 +8,8 @@ import ProductDetailClient from "@/components/ProductDetailClient";
 const BASE_URL = "https://griham99.com";
 
 // Helper to look up a product by ID, numeric productId, or slug
-async function fetchProduct(idOrSlug) {
+// Wrapped in React cache to dedupe queries between generateMetadata and page component
+const fetchProduct = cache(async (idOrSlug) => {
   let product = null;
 
   try {
@@ -45,10 +47,10 @@ async function fetchProduct(idOrSlug) {
   }
 
   return product;
-}
+});
 
 // Helper to fetch related products in the same category
-async function fetchRelatedProducts(category, currentId) {
+const fetchRelatedProducts = cache(async (category, currentId) => {
   let related = [];
   try {
     if (process.env.MONGODB_URI) {
@@ -73,7 +75,7 @@ async function fetchRelatedProducts(category, currentId) {
   }
 
   return related;
-}
+});
 
 export async function generateMetadata({ params }) {
   const product = await fetchProduct(params.id);
