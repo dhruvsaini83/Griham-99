@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { luxuryEase } from "@/lib/animations";
@@ -15,6 +16,7 @@ const TICKER_MESSAGES = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const {
     PRODUCTS,
     cartCount,
@@ -155,10 +157,15 @@ export default function Header() {
   };
 
   const executeSearch = () => {
-    setSearchQuery(inputVal.trim());
+    const q = inputVal.trim();
+    setSearchQuery(q);
     setIsDropdownOpen(false);
-    const el = document.getElementById("catalog");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      router.push(`/?search=${encodeURIComponent(q)}`);
+    } else {
+      const el = document.getElementById("catalog");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleSelectProduct = (product) => {
@@ -334,7 +341,7 @@ export default function Header() {
               />
               {inputVal && (
                 <button
-                  className="search-clear-btn min-h-[36px] min-w-[36px] flex items-center justify-center text-stone-300 hover:text-white"
+                  className="search-clear-btn min-h-[44px] min-w-[44px] flex items-center justify-center text-stone-300 hover:text-white"
                   onClick={() => {
                     setInputVal("");
                     setSearchQuery("");
@@ -825,7 +832,7 @@ export default function Header() {
                     <span>Language / भाषा:</span>
                     <div className="flex gap-1.5">
                       <button
-                        className={`min-h-[36px] min-w-[40px] px-3 py-1 rounded text-xs font-bold transition-colors ${
+                        className={`min-h-[44px] min-w-[44px] px-3 py-2 rounded text-xs font-bold transition-colors ${
                           language === "en"
                             ? "bg-[#C9A24A] text-[#073B2A]"
                             : "bg-white/10 text-stone-300"
@@ -835,7 +842,7 @@ export default function Header() {
                         EN
                       </button>
                       <button
-                        className={`min-h-[36px] min-w-[40px] px-3 py-1 rounded text-xs font-bold transition-colors ${
+                        className={`min-h-[44px] min-w-[44px] px-3 py-2 rounded text-xs font-bold transition-colors ${
                           language === "hi"
                             ? "bg-[#C9A24A] text-[#073B2A]"
                             : "bg-white/10 text-stone-300"

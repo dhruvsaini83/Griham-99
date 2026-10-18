@@ -46,7 +46,16 @@ export async function POST(request) {
       );
     }
 
-    const configuredSecret = process.env.ADMIN_SECRET_KEY || "griham_admin_secret_99";
+    const configuredSecret = process.env.ADMIN_SECRET_KEY;
+    if (!configuredSecret) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Server configuration error: ADMIN_SECRET_KEY is not defined.",
+        },
+        { status: 500 }
+      );
+    }
     const isProd = process.env.NODE_ENV === "production";
 
     const response = NextResponse.json(

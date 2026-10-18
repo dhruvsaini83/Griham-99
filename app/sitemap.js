@@ -2,7 +2,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { PRODUCTS } from "@/data/products";
 
-const BASE_URL = "https://griham99.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
 
 const CATEGORIES = [
   "home",
@@ -29,8 +29,38 @@ export default async function sitemap() {
     {
       url: `${BASE_URL}/about`,
       lastModified: currentDate,
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/contact`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/privacy-policy`,
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/terms`,
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/return-policy`,
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/shipping-policy`,
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.5,
     },
   ];
 

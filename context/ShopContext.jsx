@@ -313,6 +313,43 @@ export function ShopProvider({ children }) {
     showToast(lang === "hi" ? "हिंदी भाषा चुनी गई" : "Language set to English");
   };
 
+  // Coupon State
+  const [coupon, setCoupon] = useState(null);
+
+  const applyCoupon = (code) => {
+    if (!code || typeof code !== "string") {
+      return { success: false, message: "Please enter a coupon code." };
+    }
+    const clean = code.trim().toUpperCase();
+    if (clean === "GRIHAM99" || clean === "GRIHAM10") {
+      const newCoupon = { code: clean, discount: 0.1, type: "percent" };
+      setCoupon(newCoupon);
+      showToast("🎉 Coupon applied: 10% instant discount!");
+      return { success: true, message: "🎉 Coupon applied: 10% instant discount!" };
+    }
+    setCoupon(null);
+    showToast("❌ Invalid code. Try using GRIHAM99");
+    return { success: false, message: "❌ Invalid code. Try using GRIHAM99" };
+  };
+
+  const removeCoupon = () => {
+    setCoupon(null);
+    showToast("Coupon removed");
+  };
+
+  const increaseQuantity = (productId) => updateCartQuantity(productId, 1);
+  const decreaseQuantity = (productId) => {
+    const item = cart.find(
+      (p) => (p.id || p.productId || p._id) === productId
+    );
+    if (!item) return;
+    if (item.quantity <= 1) {
+      removeFromCart(productId);
+    } else {
+      updateCartQuantity(productId, -1);
+    }
+  };
+
   // Computed totals
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartSubtotal = cart.reduce(
@@ -323,12 +360,13 @@ export function ShopProvider({ children }) {
     (sum, item) => sum + (item.originalPrice || item.price) * item.quantity,
     0
   );
-  const cartSavings = Math.max(0, cartOriginalTotal - cartSubtotal);
+  const couponDiscount = coupon ? Math.round(cartSubtotal * coupon.discount) : 0;
+  const cartSavings = Math.max(0, cartOriginalTotal - cartSubtotal) + couponDiscount;
   const freeShippingThreshold = 499;
   const isFreeShipping =
     cartSubtotal >= freeShippingThreshold || cartSubtotal === 0;
   const shippingFee = cartSubtotal === 0 ? 0 : isFreeShipping ? 0 : 49;
-  const grandTotal = cartSubtotal + shippingFee;
+  const grandTotal = Math.max(0, cartSubtotal - couponDiscount + shippingFee);
 
   // Modal and Drawer helper actions
   const openQuickView = (product) => setQuickViewProduct(product);
@@ -369,6 +407,12 @@ export function ShopProvider({ children }) {
         isFreeShipping,
         shippingFee,
         grandTotal,
+        coupon,
+        couponDiscount,
+        applyCoupon,
+        removeCoupon,
+        increaseQuantity,
+        decreaseQuantity,
         setActiveCategory,
         setMaxPrice,
         setSortBy,

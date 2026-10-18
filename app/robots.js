@@ -1,12 +1,12 @@
 export default function robots() {
-  const baseUrl = "https://griham99.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
 
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/admin/*", "/api/", "/api/*"],
+        disallow: ["/admin/", "/api/admin/", "/api/auth/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

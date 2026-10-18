@@ -5,7 +5,7 @@ import Product from "@/models/Product";
 import { PRODUCTS } from "@/data/products";
 import CategoryPageClient from "@/components/CategoryPageClient";
 
-const BASE_URL = "https://griham99.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
 
 const CATEGORY_SEO_DATA = {
   home: {
@@ -69,7 +69,7 @@ const fetchCategoryProducts = cache(async (catKey) => {
     );
   }
 
-  return products;
+  return JSON.parse(JSON.stringify(products || []));
 });
 
 export async function generateMetadata({ params }) {
@@ -110,7 +110,7 @@ export async function generateMetadata({ params }) {
       locale: "en_IN",
       images: [
         {
-          url: "https://griham99.com/assets/logo.svg",
+          url: `${BASE_URL}/assets/logo.svg`,
           width: 1200,
           height: 630,
           alt: `${catInfo.title} Under ₹99 - Griham 99+ Jaipur`,
@@ -121,7 +121,7 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://griham99.com/assets/logo.svg"],
+      images: [`${BASE_URL}/assets/logo.svg`],
     },
     robots: {
       index: true,
@@ -139,6 +139,7 @@ export default async function CategoryPage({ params }) {
   }
 
   const products = await fetchCategoryProducts(catKey);
+  const plainProducts = JSON.parse(JSON.stringify(products));
   const canonicalUrl = `${BASE_URL}/category/${catKey}`;
 
   // 1. Structured Data: CollectionPage & ItemList Schema
@@ -151,7 +152,7 @@ export default async function CategoryPage({ params }) {
     "url": canonicalUrl,
     "mainEntity": {
       "@type": "ItemList",
-      "itemListElement": products.map((item, idx) => ({
+      "itemListElement": plainProducts.map((item, idx) => ({
         "@type": "ListItem",
         "position": idx + 1,
         "item": {
@@ -204,7 +205,7 @@ export default async function CategoryPage({ params }) {
         categoryKey={catKey}
         title={catInfo.title}
         descriptionText={catInfo.description}
-        products={products}
+        products={plainProducts}
       />
     </>
   );

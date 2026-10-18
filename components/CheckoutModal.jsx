@@ -16,6 +16,10 @@ export default function CheckoutModal() {
     cartOriginalTotal,
     shippingFee,
     grandTotal,
+    coupon,
+    couponDiscount,
+    applyCoupon,
+    removeCoupon,
     isCheckoutOpen,
     setIsCheckoutOpen,
     clearCart,
@@ -25,6 +29,7 @@ export default function CheckoutModal() {
   } = useShop();
 
   const [step, setStep] = useState(1);
+  const [checkoutCouponInput, setCheckoutCouponInput] = useState("");
 
   // Form Fields
   const [formData, setFormData] = useState({
@@ -143,7 +148,8 @@ export default function CheckoutModal() {
         totalAmount: grandTotal,
         subtotal: cartSubtotal,
         shippingCharge: shippingFee,
-        discount: 0,
+        discount: couponDiscount || 0,
+        couponCode: coupon?.code || "",
         shippingAddress: {
           fullName: formData.fullName,
           house: formData.address1,
@@ -192,8 +198,13 @@ export default function CheckoutModal() {
       }\n`;
     });
 
-    msg += `\n*TOTAL AMOUNT PAYABLE: ₹${grandTotal}*\n`;
-    msg += `(Includes ₹${shippingFee} shipping fee)\n\n`;
+    msg += `\n*ORDER TOTAL BREAKDOWN:*\n`;
+    msg += `• Subtotal: ₹${cartSubtotal}\n`;
+    if (coupon) {
+      msg += `• Coupon (${coupon.code}): -₹${couponDiscount}\n`;
+    }
+    msg += `• Delivery: ${shippingFee === 0 ? "FREE" : `₹${shippingFee}`}\n`;
+    msg += `*• TOTAL AMOUNT PAYABLE: ₹${grandTotal}*\n\n`;
     msg += `Please confirm my order dispatch. Dhanyawad! 🙏`;
 
     const waUrl = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -679,7 +690,49 @@ export default function CheckoutModal() {
             </div>
 
             {/* Order Summary Recap */}
-            <div className="order-summary-box-demo">
+            <div className="order-summary-box-demo mb-4">
+              {coupon ? (
+                <div className="flex items-center justify-between p-2.5 mb-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <div className="text-xs text-[#073B2A] font-bold">
+                    <span>🎉 Coupon <b>{coupon.code}</b> applied! (10% OFF: -₹{couponDiscount})</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeCoupon}
+                    className="text-xs text-red-600 font-bold hover:underline ml-2"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="mb-3">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="form-control min-h-[40px] text-xs uppercase"
+                      placeholder="Coupon Code (e.g. GRIHAM99)"
+                      value={checkoutCouponInput}
+                      onChange={(e) => setCheckoutCouponInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          applyCoupon(checkoutCouponInput);
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="btn-gold-primary min-h-[40px] px-3 text-xs font-bold"
+                      onClick={() => applyCoupon(checkoutCouponInput)}
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  <div className="text-[11px] text-stone-500 mt-1">
+                    Have a promo code? Enter <b>GRIHAM99</b> for 10% instant discount.
+                  </div>
+                </div>
+              )}
+
               <div
                 style={{
                   display: "flex",

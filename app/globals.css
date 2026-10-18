@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -55,8 +53,8 @@ html {
       --color-success-bg: #EAF7EE;
 
       /* Typography */
-      --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-body: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
       --font-royal: 'Cinzel', serif;
       --font-hindi: 'Noto Sans Devanagari', sans-serif;
 
@@ -443,8 +441,12 @@ html {
     }
 
     .search-tag {
-      font-size: 0.75rem;
-      padding: 4px 10px;
+      font-size: 0.78rem;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
       background: var(--color-cream);
       border: 1px solid var(--color-border-soft);
       border-radius: var(--radius-pill);
@@ -1161,6 +1163,10 @@ html {
       font-weight: 700;
       cursor: pointer;
       text-decoration: underline;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
     }
 
     /* Product Grid */

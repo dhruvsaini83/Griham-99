@@ -90,19 +90,24 @@ const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }
       data-id={prodId}
     >
       <div className="product-card-thumb-wrap aspect-square w-full relative overflow-hidden bg-[#F4EFE6]">
-        <img
-          src={getOptimizedImageUrl(product.image, 400)}
-          alt={`${product.name} at ${product.price || 99} rupees - Griham 99+`}
-          width={400}
-          height={400}
-          loading="lazy"
-          decoding="async"
-          className="product-card-img w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=400&q=75";
-          }}
-        />
+        <Link
+          href={`/products/${product.slug || product.productId || prodId}`}
+          className="block w-full h-full cursor-pointer"
+        >
+          <img
+            src={getOptimizedImageUrl(product.image, 400)}
+            alt={`${product.name} at ${product.price || 99} rupees - Griham 99+`}
+            width={400}
+            height={400}
+            loading="lazy"
+            decoding="async"
+            className="product-card-img w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=400&q=75";
+            }}
+          />
+        </Link>
 
         <div className="product-badge-group absolute top-2.5 left-2.5 flex flex-col gap-1 z-10 pointer-events-none">
           {product.price <= 99 && (

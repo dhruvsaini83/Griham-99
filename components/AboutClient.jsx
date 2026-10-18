@@ -16,23 +16,25 @@ import ToastContainer from "@/components/ToastContainer";
 import { luxuryEase } from "@/lib/animations";
 import { siteConfig } from "@/lib/config";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
+
 // Local Business & Store JSON-LD Schema for Google Local SEO
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "Store",
-  "@id": "https://griham99.com/about#store",
+  "@id": `${siteUrl}/about#store`,
   "name": "Griham 99 Store",
   "alternateName": "गृहम 99",
   "description":
     "Griham 99 Store - Apka Apna Ghar Ka Store at Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak, Jaipur (302015). Jaipur based family store providing 99+ everyday essentials, kitchen utility, and festive decor starting at ₹49 for Indian households.",
   "image": [
-    "https://griham99.com/assets/logo.svg",
+    `${siteUrl}/assets/logo.svg`,
     "/assets/logo.svg",
     "/assets/IMG-20261006-WA0023.jpg",
-    "https://griham99.com/assets/IMG-20261006-WA0023.jpg"
+    `${siteUrl}/assets/IMG-20261006-WA0023.jpg`
   ],
-  "logo": "https://griham99.com/assets/logo.svg",
-  "url": "https://griham99.com/about",
+  "logo": `${siteUrl}/assets/logo.svg`,
+  "url": `${siteUrl}/about`,
   "telephone": siteConfig.supportPhone,
   "email": siteConfig.supportEmail,
   "priceRange": "₹49 - ₹999",

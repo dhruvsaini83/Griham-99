@@ -17,18 +17,18 @@ export const metadata = {
     "Jaipur online shopping 99",
   ],
   alternates: {
-    canonical: "https://griham99.com",
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app",
   },
   openGraph: {
     title: "All Home Essentials at Just ₹99 in Jaipur | Griham 99+",
     description:
       "Ghar ke har zaroori items sirf ₹99 me. Jaipur me free delivery. Kitchen storage, home decor and utility essentials at Griham 99+.",
-    url: "https://griham99.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app",
     type: "website",
     locale: "en_IN",
     images: [
       {
-        url: "https://griham99.com/assets/logo.svg",
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app"}/assets/logo.svg`,
         width: 1200,
         height: 630,
         alt: "Griham 99+ - 99 Store Jaipur",
@@ -40,7 +40,7 @@ export const metadata = {
     title: "All Home Essentials at Just ₹99 in Jaipur | Griham 99+",
     description:
       "Ghar ke har zaroori items sirf ₹99 me. Jaipur me fastest free delivery.",
-    images: ["https://griham99.com/assets/logo.svg"],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app"}/assets/logo.svg`],
   },
   robots: {
     index: true,

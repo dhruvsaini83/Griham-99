@@ -14,7 +14,9 @@ export default function AdminDashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/stats");
+      const res = await fetch("/api/admin/stats", {
+        credentials: "include",
+      });
       const json = await res.json();
       if (!res.ok || !json.success) {
         throw new Error(json.error || "Failed to load dashboard metrics");

@@ -184,13 +184,13 @@ export default function WishlistDrawer() {
                         <div className="flex items-center gap-2 mt-2">
                           <motion.button
                             whileTap={{ scale: 0.95 }}
-                            className="btn-gold-primary min-h-[40px] px-3.5 py-1.5 rounded-lg text-xs font-bold hover:brightness-110 transition-all"
+                            className="btn-gold-primary min-h-[44px] min-w-[44px] px-4 py-2 rounded-lg text-xs font-bold hover:brightness-110 transition-all flex items-center justify-center"
                             onClick={() => handleMoveToCart(p)}
                           >
                             {language === "hi" ? "कार्ट में ले जाएं" : "Move to Cart"}
                           </motion.button>
                           <button
-                            className="cart-item-remove-btn min-h-[40px] text-xs text-stone-500 hover:text-[#C83214] underline px-2"
+                            className="cart-item-remove-btn min-h-[44px] min-w-[44px] inline-flex items-center text-xs text-stone-500 hover:text-[#C83214] underline px-2.5"
                             onClick={() => toggleWishlist(p.id ?? p.productId ?? p._id)}
                           >
                             {language === "hi" ? "हटाएं" : "Remove"}

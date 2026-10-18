@@ -17,13 +17,13 @@ export const metadata = {
     "retail store Jaipur directions",
   ],
   alternates: {
-    canonical: "https://griham99.com/about",
+    canonical: `${siteConfig.url}/about`,
   },
   openGraph: {
     title: "About Griham 99 Store — Apka Apna Ghar Ka Store | Barkat Nagar, Tonk Phatak, Jaipur",
     description:
       "Visit our store at Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak, Jaipur (302015). 99+ varieties starting at honest ₹49.",
-    url: "https://griham99.com/about",
+    url: `${siteConfig.url}/about`,
     siteName: "Griham 99+",
     type: "website",
     images: [

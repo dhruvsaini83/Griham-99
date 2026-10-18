@@ -18,7 +18,10 @@ export default function AdminLayout({ children }) {
     if (confirm("Kya aap Admin portal se logout karna chahte hain?")) {
       setLoggingOut(true);
       try {
-        await fetch("/api/admin/logout", { method: "POST" });
+        await fetch("/api/admin/logout", {
+          method: "POST",
+          credentials: "include",
+        });
         router.push("/admin/login");
         router.refresh();
       } catch (err) {

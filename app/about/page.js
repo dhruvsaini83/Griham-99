@@ -1,6 +1,8 @@
 import AboutClient from "@/components/AboutClient";
 import { siteConfig } from "@/lib/config";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
+
 export const metadata = {
   title: "About Griham 99+ Store Jaipur | Apka Apna Ghar Ka 99 Store",
   description:
@@ -16,18 +18,18 @@ export const metadata = {
     "Griham 99 Store Jaipur",
   ],
   alternates: {
-    canonical: "https://griham99.com/about",
+    canonical: `${siteUrl}/about`,
   },
   openGraph: {
     title: "About Griham 99+ Store Jaipur | Apka Apna Ghar Ka 99 Store",
     description:
       "Visit Griham 99 Store in Barkat Nagar, Tonk Phatak, Jaipur. Quality home, kitchen, and festive decor under ₹99.",
-    url: "https://griham99.com/about",
+    url: `${siteUrl}/about`,
     type: "website",
     locale: "en_IN",
     images: [
       {
-        url: "https://griham99.com/assets/logo.svg",
+        url: `${siteUrl}/assets/logo.svg`,
         width: 1200,
         height: 630,
         alt: "Griham 99+ Store Jaipur Location",
@@ -39,7 +41,7 @@ export const metadata = {
     title: "About Griham 99+ Store Jaipur | Apka Apna Ghar Ka 99 Store",
     description:
       "Griham 99+ Store at Barkat Nagar, Tonk Phatak, Jaipur. 99+ everyday essentials starting at ₹49.",
-    images: ["https://griham99.com/assets/logo.svg"],
+    images: [`${siteUrl}/assets/logo.svg`],
   },
   robots: {
     index: true,
@@ -50,17 +52,17 @@ export const metadata = {
 const storeSchema = {
   "@context": "https://schema.org",
   "@type": "Store",
-  "@id": "https://griham99.com/about#store",
+  "@id": `${siteUrl}/about#store`,
   name: "Griham 99 Store (गृहम 99)",
   alternateName: ["Griham 99+", "Griham 99 Plus Store Jaipur"],
   description:
     "Griham 99 Store - Apka Apna Ghar Ka Store at Gali No. 15, Sachivalaya Colony, Adarsh Bazar, Barkat Nagar, Tonk Phatak, Jaipur, Rajasthan 302015. Jaipur based store providing 99+ everyday home, kitchen, festive and storage essentials starting at ₹49.",
   image: [
-    "https://griham99.com/assets/logo.svg",
-    "https://griham99.com/assets/IMG-20261006-WA0023.jpg",
+    `${siteUrl}/assets/logo.svg`,
+    `${siteUrl}/assets/IMG-20261006-WA0023.jpg`,
   ],
-  logo: "https://griham99.com/assets/logo.svg",
-  url: "https://griham99.com/about",
+  logo: `${siteUrl}/assets/logo.svg`,
+  url: `${siteUrl}/about`,
   telephone: siteConfig.supportPhone,
   email: siteConfig.supportEmail,
   priceRange: "₹49 - ₹99",
@@ -97,13 +99,13 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://griham99.com",
+      item: siteUrl,
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "About Store",
-      item: "https://griham99.com/about",
+      item: `${siteUrl}/about`,
     },
   ],
 };

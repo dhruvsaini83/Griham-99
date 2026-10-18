@@ -20,7 +20,9 @@ export default function AdminProductsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/products");
+      const res = await fetch("/api/admin/products", {
+        credentials: "include",
+      });
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Failed to fetch products");
@@ -50,6 +52,7 @@ export default function AdminProductsPage() {
       const id = productToDelete.productId || productToDelete._id;
       const res = await fetch(`/api/admin/products/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
 
@@ -471,13 +474,13 @@ export default function AdminProductsPage() {
                       <div className="inline-flex items-center gap-2">
                         <Link
                           href={`/admin/products/edit/${pId}`}
-                          className="px-3 py-1.5 bg-gray-100 hover:bg-orange-100 hover:text-[#FF6B00] rounded-lg text-xs font-bold text-gray-700 transition-colors"
+                          className="px-3.5 py-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-gray-100 hover:bg-orange-100 hover:text-[#FF6B00] rounded-lg text-xs font-bold text-gray-700 transition-colors"
                         >
                           Edit
                         </Link>
                         <button
                           onClick={() => setProductToDelete(p)}
-                          className="px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg text-xs font-bold text-red-600 transition-colors"
+                          className="px-3.5 py-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-red-50 hover:bg-red-100 rounded-lg text-xs font-bold text-red-600 transition-colors"
                         >
                           Delete
                         </button>

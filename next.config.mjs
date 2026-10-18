@@ -20,6 +20,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["framer-motion"],
+  },
   async headers() {
     return [
       {
@@ -57,10 +60,12 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com",
+              process.env.NODE_ENV === "production"
+                ? "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com"
+                : "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: blob: https: res.cloudinary.com",
+              "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://upload.wikimedia.org",
               "connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://wa.me https://api.cloudinary.com",
               "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://www.google.com https://maps.google.com",
             ].join("; "),

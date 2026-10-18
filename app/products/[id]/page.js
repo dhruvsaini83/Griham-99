@@ -1,11 +1,12 @@
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { PRODUCTS } from "@/data/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
-const BASE_URL = "https://griham99.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://griham-99.vercel.app";
 
 // Helper to look up a product by ID, numeric productId, or slug
 // Wrapped in React cache to dedupe queries between generateMetadata and page component
@@ -16,17 +17,17 @@ const fetchProduct = cache(async (idOrSlug) => {
     if (process.env.MONGODB_URI) {
       await connectToDatabase();
       const isNum = !isNaN(Number(idOrSlug));
+      const isValidId = mongoose.isValidObjectId(idOrSlug);
       
-      const query = isNum
-        ? { productId: Number(idOrSlug) }
-        : {
-            $or: [
-              { slug: idOrSlug },
-              { _id: idOrSlug.length === 24 ? idOrSlug : null },
-            ],
-          };
+      const queryConditions = [{ slug: idOrSlug }];
+      if (isValidId) {
+        queryConditions.push({ _id: idOrSlug });
+      }
+      if (isNum) {
+        queryConditions.push({ productId: Number(idOrSlug) });
+      }
 
-      product = await Product.findOne(query).lean();
+      product = await Product.findOne({ $or: queryConditions }).lean();
     }
   } catch (err) {
     console.warn("Product fetch MongoDB note:", err.message);
@@ -46,6 +47,10 @@ const fetchProduct = cache(async (idOrSlug) => {
     });
   }
 
+  if (product) {
+    product = JSON.parse(JSON.stringify(product));
+  }
+
   return product;
 });
 
@@ -56,7 +61,7 @@ const fetchRelatedProducts = cache(async (category, currentId) => {
     if (process.env.MONGODB_URI) {
       await connectToDatabase();
       related = await Product.find({
-        category: category.toLowerCase().trim(),
+        category: category?.toLowerCase().trim(),
         productId: { $ne: currentId },
       })
         .limit(4)
@@ -69,16 +74,17 @@ const fetchRelatedProducts = cache(async (category, currentId) => {
   if (!related || related.length === 0) {
     related = PRODUCTS.filter(
       (p) =>
-        p.category.toLowerCase().trim() === category.toLowerCase().trim() &&
+        p.category.toLowerCase().trim() === category?.toLowerCase().trim() &&
         String(p.id) !== String(currentId)
     ).slice(0, 4);
   }
 
-  return related;
+  return JSON.parse(JSON.stringify(related || []));
 });
 
 export async function generateMetadata({ params }) {
-  const product = await fetchProduct(params.id);
+  const { id } = params;
+  const product = await fetchProduct(id);
 
   if (!product) {
     return {
@@ -87,22 +93,23 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const routeIdentifier = product.slug || product.productId || product.id;
+  const plainProduct = JSON.parse(JSON.stringify(product));
+  const routeIdentifier = plainProduct.slug || plainProduct.productId || plainProduct.id || plainProduct._id;
   const canonicalUrl = `${BASE_URL}/products/${routeIdentifier}`;
 
   // Unique 50-60 chars title with ₹99 and product name
-  const title = `${product.name} at ₹${product.price} | Griham 99+ Jaipur`;
+  const title = `${plainProduct.name} at ₹${plainProduct.price} | Griham 99+ Jaipur`;
 
   // 150-160 chars Hindi + English mix description
-  const description = `${product.name} sirf ₹${product.price} me. Jaipur me fastest free delivery. Kitchen, storage aur home essentials Griham 99+ pe order karo.`;
+  const description = `${plainProduct.name} sirf ₹${plainProduct.price} me. Jaipur me fastest free delivery. Kitchen, storage aur home essentials Griham 99+ pe order karo.`;
 
   return {
     title,
     description,
     keywords: [
-      product.name,
-      `${product.name} Jaipur`,
-      `${product.category} under 99`,
+      plainProduct.name,
+      `${plainProduct.name} Jaipur`,
+      `${plainProduct.category} under 99`,
       "99 store Jaipur",
       "kitchen storage 99 rupees",
       "Griham 99+",
@@ -119,10 +126,10 @@ export async function generateMetadata({ params }) {
       locale: "en_IN",
       images: [
         {
-          url: product.image,
+          url: plainProduct.image,
           width: 800,
           height: 800,
-          alt: `${product.name} at 99 rupees - Griham 99+`,
+          alt: `${plainProduct.name} at 99 rupees - Griham 99+`,
         },
       ],
     },
@@ -130,7 +137,7 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title,
       description,
-      images: [product.image],
+      images: [plainProduct.image],
     },
     robots: {
       index: true,
@@ -145,25 +152,45 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductDetailPage({ params }) {
-  const product = await fetchProduct(params.id);
+  const { id } = params;
+  const product = await fetchProduct(id);
 
   if (!product) {
     notFound();
   }
 
-  const prodId = product.id ?? product.productId ?? product._id;
-  const routeIdentifier = product.slug || prodId;
+  // Convert MongoDB ObjectId and Dates to plain strings
+  const plainProduct = {
+    ...JSON.parse(JSON.stringify(product)),
+    _id: product._id ? product._id.toString() : "",
+    id: (product.id || product.productId || product._id || "").toString(),
+    createdAt: product.createdAt ? product.createdAt.toString() : undefined,
+    updatedAt: product.updatedAt ? product.updatedAt.toString() : undefined,
+  };
+
+  const prodId = plainProduct.id || plainProduct.productId || plainProduct._id;
+  const routeIdentifier = plainProduct.slug || prodId;
   const canonicalUrl = `${BASE_URL}/products/${routeIdentifier}`;
-  const related = await fetchRelatedProducts(product.category, prodId);
+  const related = await fetchRelatedProducts(plainProduct.category, prodId);
+  const plainRelated = related.map((p) => {
+    const item = JSON.parse(JSON.stringify(p));
+    return {
+      ...item,
+      _id: item._id ? item._id.toString() : "",
+      id: (item.id || item.productId || item._id || "").toString(),
+      createdAt: item.createdAt ? item.createdAt.toString() : undefined,
+      updatedAt: item.updatedAt ? item.updatedAt.toString() : undefined,
+    };
+  });
 
   // 1. Structured Data: Google Rich Results Product Schema
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     "@id": `${canonicalUrl}#product`,
-    "name": product.name,
-    "image": product.images?.length > 0 ? product.images : [product.image],
-    "description": product.description,
+    "name": plainProduct.name,
+    "image": plainProduct.images?.length > 0 ? plainProduct.images : [plainProduct.image],
+    "description": plainProduct.description,
     "sku": `GRIHAM-${prodId}`,
     "brand": {
       "@type": "Brand",
@@ -173,7 +200,7 @@ export default async function ProductDetailPage({ params }) {
       "@type": "Offer",
       "url": canonicalUrl,
       "priceCurrency": "INR",
-      "price": product.price,
+      "price": plainProduct.price,
       "priceValidUntil": "2027-12-31",
       "itemCondition": "https://schema.org/NewCondition",
       "availability": "https://schema.org/InStock",
@@ -184,8 +211,8 @@ export default async function ProductDetailPage({ params }) {
     },
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": product.rating || 4.8,
-      "reviewCount": product.reviews || 120,
+      "ratingValue": plainProduct.rating || 4.8,
+      "reviewCount": plainProduct.reviews || 120,
     },
   };
 
@@ -203,13 +230,13 @@ export default async function ProductDetailPage({ params }) {
       {
         "@type": "ListItem",
         "position": 2,
-        "name": product.category,
-        "item": `${BASE_URL}/category/${product.category.toLowerCase()}`,
+        "name": plainProduct.category,
+        "item": `${BASE_URL}/category/${plainProduct.category?.toLowerCase()}`,
       },
       {
         "@type": "ListItem",
         "position": 3,
-        "name": product.name,
+        "name": plainProduct.name,
         "item": canonicalUrl,
       },
     ],
@@ -225,7 +252,7 @@ export default async function ProductDetailPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ProductDetailClient product={product} relatedProducts={related} />
+      <ProductDetailClient product={plainProduct} relatedProducts={plainRelated} />
     </>
   );
 }

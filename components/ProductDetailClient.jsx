@@ -136,7 +136,7 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
                         prev === 0 ? allImages.length - 1 : prev - 1
                       )
                     }
-                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] w-11 h-11 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
                     aria-label="Previous image"
                   >
                     ‹
@@ -146,7 +146,7 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
                     onClick={() =>
                       setActiveIndex((prev) => (prev + 1) % allImages.length)
                     }
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] w-11 h-11 bg-white/90 hover:bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 text-xl font-bold transition-all z-10"
                     aria-label="Next image"
                   >
                     ›

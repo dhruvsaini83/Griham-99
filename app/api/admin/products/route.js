@@ -5,6 +5,8 @@ import { isValidAdminSecret, sanitizeNoSql } from "@/lib/security";
 import { productCreateSchema, sanitizeText } from "@/lib/validators";
 import cloudinary from "@/lib/cloudinary";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/admin/products
 // List all products with optional search query
 export async function GET(request) {

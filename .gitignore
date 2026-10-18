@@ -32,11 +32,13 @@ yarn-error.log*
 
 # env files (never commit secrets or database connection strings)
 .env
+.env.local
 .env*.local
 .env.development
 .env.test
 .env.production
 !.env.example
+!.env.local.example
 
 # vercel
 .vercel

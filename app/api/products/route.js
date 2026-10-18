@@ -68,15 +68,38 @@ export async function GET(request) {
       }
     }
 
-    const products = await Product.find({})
+    const { searchParams } = new URL(request.url);
+    const search = (searchParams.get("search") || "").trim();
+    const category = (searchParams.get("category") || "").trim();
+
+    const filter = {};
+    if (search) {
+      const sanitized = sanitizeText(search);
+      filter.$or = [
+        { name: { $regex: sanitized, $options: "i" } },
+        { description: { $regex: sanitized, $options: "i" } },
+        { category: { $regex: sanitized, $options: "i" } },
+      ];
+      if (!isNaN(Number(search))) {
+        filter.$or.push({ productId: Number(search) });
+      }
+    }
+
+    if (category && category !== "all") {
+      filter.category = category.toLowerCase().trim();
+    }
+
+    const products = await Product.find(filter)
       .sort({ productId: 1, createdAt: -1 })
       .lean();
+
+    const plainProducts = JSON.parse(JSON.stringify(products));
 
     return NextResponse.json({
       success: true,
       source: "mongodb",
-      count: products.length,
-      products,
+      count: plainProducts.length,
+      products: plainProducts,
     });
   } catch (error) {
     console.error("Error in GET /api/products:", error);
@@ -183,7 +206,7 @@ export async function POST(request) {
       {
         success: true,
         message: "Product created securely",
-        product: newProduct,
+        product: JSON.parse(JSON.stringify(newProduct)),
       },
       { status: 201 }
     );

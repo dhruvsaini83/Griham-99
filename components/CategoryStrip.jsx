@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useShop } from "@/context/ShopContext";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-helpers";
 
 const CATEGORIES_DATA = [
   {
@@ -113,9 +114,13 @@ export default function CategoryStrip() {
             >
               <div className="category-card-img-wrap">
                 <img
-                  src={cat.image}
+                  src={getOptimizedImageUrl(cat.image, 360)}
                   alt={`${cat.name} products at 99 rupees - Griham 99+`}
+                  width={360}
+                  height={240}
                   loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="category-card-body p-3">

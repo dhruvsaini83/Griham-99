@@ -4,6 +4,8 @@ import Product from "@/models/Product";
 import Order from "@/models/Order";
 import { isValidAdminSecret } from "@/lib/security";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/admin/stats
 // Retrieves live operational metrics: product counts, category breakdown, stock health, and recent activities.
 export async function GET(request) {

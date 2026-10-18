@@ -136,15 +136,31 @@ export function middleware(request) {
       return response;
     }
 
-    const adminAuthCookie = request.cookies.get("admin_auth")?.value;
     const adminSessionToken = request.cookies.get("admin_session_token")?.value;
     const adminKeyHeader = request.headers.get("x-admin-secret-key");
-    const configuredSecret = process.env.ADMIN_SECRET_KEY || "griham_admin_secret_99";
+    const configuredSecret = process.env.ADMIN_SECRET_KEY;
+
+    // Explicitly reject common boolean backdoor / mock values
+    if (
+      adminSessionToken === "true" ||
+      adminSessionToken === "false" ||
+      adminKeyHeader === "true" ||
+      adminKeyHeader === "false"
+    ) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized: Invalid admin credentials." },
+          { status: 401 }
+        );
+      }
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
 
     // Timing-safe authorization check against HttpOnly session token or API header
     const isAuthorized =
-      (adminSessionToken && timingSafeEqualStr(adminSessionToken, configuredSecret)) ||
-      (adminKeyHeader && timingSafeEqualStr(adminKeyHeader, configuredSecret));
+      Boolean(configuredSecret) &&
+      ((adminSessionToken && timingSafeEqualStr(adminSessionToken, configuredSecret)) ||
+       (adminKeyHeader && timingSafeEqualStr(adminKeyHeader, configuredSecret)));
 
     if (!isAuthorized) {
       if (pathname.startsWith("/api/")) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import dynamic from "next/dynamic";
 import { ShopProvider } from "@/context/ShopContext";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -13,12 +13,20 @@ import FaqSection from "@/components/FaqSection";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
-import QuickViewModal from "@/components/QuickViewModal";
-import CheckoutModal from "@/components/CheckoutModal";
-import PincodeModal from "@/components/PincodeModal";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ToastContainer from "@/components/ToastContainer";
 import SplashScreen from "@/components/SplashScreen";
+
+// Dynamically imported interactive modals to reduce initial 4G bundle size
+const QuickViewModal = dynamic(() => import("@/components/QuickViewModal"), {
+  ssr: false,
+});
+const CheckoutModal = dynamic(() => import("@/components/CheckoutModal"), {
+  ssr: false,
+});
+const PincodeModal = dynamic(() => import("@/components/PincodeModal"), {
+  ssr: false,
+});
 
 export default function HomeClient() {
   return (

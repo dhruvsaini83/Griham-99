@@ -28,8 +28,8 @@ module.exports = {
         cream: "#FAF7F2",
       },
       fontFamily: {
-        sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
-        serif: ["'Playfair Display'", "Georgia", "serif"],
+        sans: ["var(--font-jakarta)", "'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+        serif: ["var(--font-playfair)", "'Playfair Display'", "Georgia", "serif"],
         royal: ["'Cinzel'", "serif"],
         hindi: ["'Noto Sans Devanagari'", "sans-serif"],
       },

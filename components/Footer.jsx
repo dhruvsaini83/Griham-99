@@ -273,7 +273,7 @@ export default function Footer() {
           {/* Col 3: Customer Care & Policies */}
           <div>
             <h4 className="footer-col-title">
-              {language === "hi" ? "ग्राहक सेवा" : "Customer Care"}
+              {language === "hi" ? "ग्राहक सेवा एवं नीतियां" : "Customer Care & Policies"}
             </h4>
             <ul className="footer-links-list">
               <li>
@@ -287,11 +287,31 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/about#store-location"
+                  href="/contact"
                   className="footer-link text-[#E6C875] font-semibold flex items-center gap-1.5"
                 >
                   <span>📍</span>
-                  <span>{language === "hi" ? "जयपुर स्टोर लोकेशन & मैप" : "Jaipur Store & Live Map"}</span>
+                  <span>{language === "hi" ? "संपर्क करें (Contact & Store)" : "Contact Us & Store"}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping-policy" className="footer-link">
+                  Shipping & Delivery Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/return-policy" className="footer-link">
+                  Return & Refund Policy (7 Days)
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="footer-link">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="footer-link">
+                  Terms & Conditions
                 </Link>
               </li>
               <li>
@@ -302,44 +322,6 @@ export default function Footer() {
                   style={{ textAlign: "left", background: "none", border: "none" }}
                 >
                   Check Delivery Pincode
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => setIsCartOpen(true)}
-                  className="footer-link"
-                  style={{ textAlign: "left", background: "none", border: "none" }}
-                >
-                  Track Your Cart
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() =>
-                    showToast(
-                      "Shipping Policy: Dispatched within 24 hours via reliable Indian couriers."
-                    )
-                  }
-                  className="footer-link"
-                  style={{ textAlign: "left", background: "none", border: "none" }}
-                >
-                  Shipping & Delivery Policy
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() =>
-                    showToast(
-                      "Privacy Policy: Customer data is secure and never shared."
-                    )
-                  }
-                  className="footer-link"
-                  style={{ textAlign: "left", background: "none", border: "none" }}
-                >
-                  Privacy Policy & Terms
                 </button>
               </li>
             </ul>
@@ -455,8 +437,20 @@ export default function Footer() {
         {/* Bottom Strip */}
         <div className="footer-bottom-strip flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-8 border-t border-white/10 text-xs text-stone-400">
           <div>
-            © {new Date().getFullYear()} गृहम 99+ (Griham 99+ Retail). All Rights Reserved. Indian
-            Retail Store.
+            <div>
+              © {new Date().getFullYear()} गृहम 99+ (Griham 99+ Retail). All Rights Reserved. Indian Retail Store.
+            </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-stone-400 mt-1.5">
+              <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              <span>•</span>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
+              <span>•</span>
+              <Link href="/return-policy" className="hover:text-white transition-colors">Return Policy</Link>
+              <span>•</span>
+              <Link href="/shipping-policy" className="hover:text-white transition-colors">Shipping Policy</Link>
+              <span>•</span>
+              <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
+            </div>
           </div>
 
           <div className="payment-icons-strip flex flex-wrap gap-2 justify-center sm:justify-end">

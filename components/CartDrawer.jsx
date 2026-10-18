@@ -17,25 +17,29 @@ export default function CartDrawer() {
     cartCount,
     cartSubtotal,
     cartOriginalTotal,
+    cartSavings,
+    grandTotal,
     freeShippingThreshold,
     isFreeShipping,
     shippingFee,
     updateCartQuantity,
+    increaseQuantity,
+    decreaseQuantity,
     removeFromCart,
     setIsCheckoutOpen,
     setActiveCategory,
     showToast,
     language,
+    coupon,
+    couponDiscount,
+    applyCoupon,
+    removeCoupon,
   } = useShop();
 
   const [couponInput, setCouponInput] = useState("");
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [couponMessage, setCouponMessage] = useState("");
 
-  // Additional discount if coupon applied
-  const couponDiscount = couponApplied ? Math.round(cartSubtotal * 0.1) : 0;
-  const totalSavings = Math.max(0, cartOriginalTotal - cartSubtotal) + couponDiscount;
-  const finalPayable = Math.max(0, cartSubtotal - couponDiscount + shippingFee);
+  const totalSavings = cartSavings;
+  const finalPayable = grandTotal;
 
   // Free shipping progress calculations
   const neededForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
@@ -45,15 +49,11 @@ export default function CartDrawer() {
   );
 
   const handleApplyCoupon = () => {
-    const code = couponInput.trim().toUpperCase();
-    if (code === "GRIHAM99" || code === "GRIHAM10") {
-      setCouponApplied(true);
-      setCouponMessage("🎉 Coupon applied: 10% instant discount!");
-      showToast("Coupon applied successfully!");
-    } else {
-      setCouponApplied(false);
-      setCouponMessage("❌ Invalid code. Try using GRIHAM99");
+    if (!couponInput.trim()) {
+      showToast("Please enter a coupon code");
+      return;
     }
+    applyCoupon(couponInput);
   };
 
   const handleWhatsAppOrder = () => {
@@ -82,8 +82,8 @@ export default function CartDrawer() {
     msg += `\n*ORDER SUMMARY:*\n`;
     msg += `• Total Items: ${cartCount}\n`;
     msg += `• Subtotal: ₹${cartSubtotal}\n`;
-    if (couponApplied) {
-      msg += `• Coupon (GRIHAM99): -₹${couponDiscount}\n`;
+    if (coupon) {
+      msg += `• Coupon (${coupon.code}): -₹${couponDiscount}\n`;
     }
     msg += `• Total Savings: ₹${totalSavings}\n`;
     msg += `• Delivery: ${shippingFee === 0 ? "FREE" : `₹${shippingFee}`}\n`;
@@ -263,8 +263,8 @@ export default function CartDrawer() {
                             <div className="qty-stepper flex items-center border border-[#E7E1D5] rounded-full overflow-hidden bg-white shadow-sm">
                               <motion.button
                                 whileTap={{ scale: 0.85 }}
-                                className="qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base hover:bg-[#F8F3E8] transition-colors"
-                                onClick={() => updateCartQuantity(item.id, -1)}
+                                className="qty-stepper-btn min-h-[44px] min-w-[44px] flex items-center justify-center font-bold text-base hover:bg-[#F8F3E8] transition-colors"
+                                onClick={() => decreaseQuantity(item.id)}
                                 aria-label="Decrease quantity"
                               >
                                 -
@@ -274,7 +274,7 @@ export default function CartDrawer() {
                               </span>
                               <motion.button
                                 whileTap={item.quantity < 10 ? { scale: 0.85 } : {}}
-                                className={`qty-stepper-btn min-h-[36px] min-w-[36px] flex items-center justify-center font-bold text-base transition-colors ${
+                                className={`qty-stepper-btn min-h-[44px] min-w-[44px] flex items-center justify-center font-bold text-base transition-colors ${
                                   item.quantity >= 10
                                     ? "text-stone-300 bg-stone-50 cursor-not-allowed"
                                     : "hover:bg-[#F8F3E8]"
@@ -288,7 +288,7 @@ export default function CartDrawer() {
                                     );
                                     return;
                                   }
-                                  updateCartQuantity(item.id, 1);
+                                  increaseQuantity(item.id);
                                 }}
                                 aria-label="Increase quantity"
                                 title={
@@ -309,8 +309,9 @@ export default function CartDrawer() {
                             )}
                           </div>
                           <button
-                            className="cart-item-remove-btn min-h-[36px] text-xs text-stone-500 hover:text-[#C83214] underline px-2"
+                            className="cart-item-remove-btn min-h-[44px] min-w-[44px] text-xs text-stone-500 hover:text-[#C83214] underline px-2 flex items-center justify-center"
                             onClick={() => removeFromCart(item.id)}
+                            aria-label="Remove item from cart"
                           >
                             Remove
                           </button>
@@ -327,36 +328,45 @@ export default function CartDrawer() {
             {cart.length > 0 && (
               <div className="drawer-footer px-4 sm:px-6 py-4 bg-[#FAF7F2] border-t border-[#E7E1D5]">
                 {/* Coupon Box */}
-                <div className="coupon-box flex gap-2">
-                  <input
-                    type="text"
-                    className="coupon-input min-h-[44px] flex-1 px-3 border border-[#E7E1D5] rounded-lg text-sm uppercase bg-white focus:outline-none focus:border-[#073B2A]"
-                    placeholder="Coupon Code (GRIHAM99)"
-                    value={couponInput}
-                    onChange={(e) => setCouponInput(e.target.value)}
-                  />
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    className="coupon-apply-btn min-h-[44px] px-4 rounded-lg bg-[#073B2A] text-white font-bold text-sm hover:brightness-110 transition-all"
-                    onClick={handleApplyCoupon}
-                  >
-                    Apply
-                  </motion.button>
-                </div>
-                <div
-                  className="coupon-hint text-xs font-semibold mt-1"
-                  style={{
-                    color: couponApplied
-                      ? "var(--color-success)"
-                      : "var(--color-text-muted)",
-                  }}
-                >
-                  {couponMessage || (
-                    <>
+                {coupon ? (
+                  <div className="coupon-box flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-xs text-[#073B2A] font-bold">
+                      <span>🎉 Coupon <b>{coupon.code}</b> applied! (10% OFF: -₹{couponDiscount})</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={removeCoupon}
+                      className="text-xs text-red-600 font-bold hover:underline ml-2"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="coupon-box flex gap-2">
+                      <input
+                        type="text"
+                        className="coupon-input min-h-[44px] flex-1 px-3 border border-[#E7E1D5] rounded-lg text-sm uppercase bg-white focus:outline-none focus:border-[#073B2A]"
+                        placeholder="Coupon Code (GRIHAM99)"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleApplyCoupon();
+                        }}
+                      />
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="coupon-apply-btn min-h-[44px] px-4 rounded-lg bg-[#073B2A] text-white font-bold text-sm hover:brightness-110 transition-all"
+                        onClick={handleApplyCoupon}
+                      >
+                        Apply
+                      </motion.button>
+                    </div>
+                    <div className="coupon-hint text-xs font-semibold mt-1 text-stone-500">
                       Use code <b>GRIHAM99</b> for 10% instant discount!
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="mt-3.5 space-y-1.5">
                   <div className="drawer-summary-line break-words text-sm sm:text-base flex justify-between">

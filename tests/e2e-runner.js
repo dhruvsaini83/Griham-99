@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-const BASE_URL = 'http://localhost:3000';
-const MONGO_URI = 'mongodb://127.0.0.1:27017/griham99';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/griham99';
 
 const ARTIFACTS_DIRS = [
   path.resolve(__dirname, '../../artifacts/screenshots'),

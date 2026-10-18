@@ -9,16 +9,31 @@ export default function PincodeModal() {
   const { isPincodeOpen, setIsPincodeOpen, setPincode, language } = useShop();
   const [inputVal, setInputVal] = useState("");
   const [error, setError] = useState("");
+  const [checking, setChecking] = useState(false);
 
-  const handleApply = () => {
+  const handleApply = async () => {
     const trimmed = inputVal.trim();
     if (!/^[1-9][0-9]{5}$/.test(trimmed)) {
       setError("Please enter a valid 6-digit Indian PIN code.");
       return;
     }
     setError("");
-    setPincode(`${trimmed}`);
-    setIsPincodeOpen(false);
+    setChecking(true);
+    try {
+      const res = await fetch(`/api/pincode/${trimmed}`);
+      const data = await res.json();
+      if (data && data.deliverable) {
+        setPincode(`${trimmed}`);
+        setIsPincodeOpen(false);
+      } else {
+        setError(data?.message || "Delivery currently not available to this pincode.");
+      }
+    } catch (e) {
+      setPincode(`${trimmed}`);
+      setIsPincodeOpen(false);
+    } finally {
+      setChecking(false);
+    }
   };
 
   const handleDirect = (pin, city) => {
@@ -102,10 +117,11 @@ export default function PincodeModal() {
               />
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="btn-gold-primary min-h-[44px] px-5 font-bold rounded-lg"
+                className="btn-gold-primary min-h-[44px] px-5 font-bold rounded-lg disabled:opacity-50"
                 onClick={handleApply}
+                disabled={checking}
               >
-                Apply
+                {checking ? "Checking..." : "Apply"}
               </motion.button>
             </div>
 
