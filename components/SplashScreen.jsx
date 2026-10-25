@@ -3,20 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function SplashScreen({ minDuration = 800 }) {
+export default function SplashScreen({ minDuration = 2000 }) {
   const [isVisible, setIsVisible] = useState(() => {
     if (typeof window !== "undefined") {
       // Never block Lighthouse or synthetic performance audit tools
       if (/Chrome-Lighthouse|Lighthouse/i.test(navigator.userAgent)) {
         return false;
-      }
-      // Skip if previously displayed during this session
-      try {
-        if (sessionStorage.getItem("griham_splash_seen")) {
-          return false;
-        }
-      } catch (e) {
-        // Ignore storage access errors
       }
     }
     return true;
@@ -24,10 +16,6 @@ export default function SplashScreen({ minDuration = 800 }) {
 
   useEffect(() => {
     if (!isVisible) return;
-
-    try {
-      sessionStorage.setItem("griham_splash_seen", "1");
-    } catch (e) {}
 
     // Lock body scroll while splash screen is active
     document.documentElement.classList.add("modal-open");

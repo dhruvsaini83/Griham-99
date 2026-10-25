@@ -35,7 +35,18 @@ export async function POST(request) {
 
     // 2. INPUT VALIDATION & NOSQL INJECTION PREVENTION
     const rawBody = await request.json();
-    const sanitizedBody = sanitizeNoSql(rawBody);
+    let sanitizedBody;
+    try {
+      sanitizedBody = sanitizeNoSql(rawBody);
+    } catch (secErr) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid input: " + secErr.message,
+        },
+        { status: 400 }
+      );
+    }
     const validationResult = orderCreateSchema.safeParse(sanitizedBody);
 
     if (!validationResult.success) {

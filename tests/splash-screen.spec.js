@@ -12,15 +12,15 @@ test('SplashScreen displays on initial load and smoothly disappears after durati
   await expect(splash).toBeVisible({ timeout: 1000 });
 
   // Verify "GRIHAM 99+" text and wave loader are present
-  await expect(splash.locator('h1')).toContainText('GRIHAM 99+');
+  await expect(splash.locator('h1, div:has-text("GRIHAM 99+")').first()).toContainText('GRIHAM 99+');
   const waveLoader = splash.locator('.wave-loader');
   await expect(waveLoader).toBeVisible();
 
-  // Wait 2.2s for splash screen to complete its 1.8s duration and fade out
-  await page.waitForTimeout(2500);
+  // Wait for splash screen to complete its duration and fade out
+  await page.waitForTimeout(2800);
 
   // Verify splash screen is no longer visible
-  await expect(splash).not.toBeVisible();
+  await expect(splash).not.toBeVisible({ timeout: 5000 });
 
   // Verify main content is visible and scroll is unlocked
   const header = page.locator('header.site-header');

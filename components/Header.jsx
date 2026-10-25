@@ -431,7 +431,7 @@ export default function Header() {
             {/* Wishlist Button (min 44px touch target) */}
             <motion.button
               whileTap={{ scale: 0.94 }}
-              className="action-btn wishlist-btn hidden sm:flex items-center justify-center min-h-[44px] min-w-[44px] text-white hover:text-[#C9A24A] relative transition-colors"
+              className="action-btn wishlist-btn wishlist-action-btn hidden sm:flex items-center justify-center min-h-[44px] min-w-[44px] text-white hover:text-[#C9A24A] relative transition-colors"
               onClick={() => setIsWishlistOpen(true)}
               aria-label={`Wishlist (${wishlist.length} items)`}
             >
@@ -457,7 +457,7 @@ export default function Header() {
             {/* Cart Button (min 44px touch target) */}
             <motion.button
               whileTap={{ scale: 0.95 }}
-              className="action-btn cart-btn flex items-center gap-1.5 min-h-[44px] px-2.5 sm:px-3 bg-[#C9A24A] text-[#073B2A] rounded-full font-bold text-xs sm:text-sm hover:bg-[#dbb357] transition-all shadow"
+              className="action-btn cart-btn cart-btn-primary flex items-center gap-1.5 min-h-[44px] px-2.5 sm:px-3 bg-[#C9A24A] text-[#073B2A] rounded-full font-bold text-xs sm:text-sm hover:bg-[#dbb357] transition-all shadow"
               onClick={() => setIsCartOpen(true)}
               aria-label={`Cart (${cartCount} items, ₹${cartSubtotal})`}
             >
@@ -475,7 +475,7 @@ export default function Header() {
                       animate={{ scale: [1.3, 1], opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                      className="cart-count-bubble absolute -top-2 -right-2 bg-[#073B2A] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#C9A24A]"
+                      className="cart-count-bubble header-action-badge absolute -top-2 -right-2 bg-[#073B2A] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#C9A24A]"
                     >
                       {cartCount}
                     </motion.span>
