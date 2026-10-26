@@ -18,7 +18,7 @@ const CATEGORIES_DATA = [
     name: "Kitchen & Dining",
     subtitle: "Starts at ₹79 • Choppers & Steel",
     image:
-      "https://images.unsplash.com/photo-1584990347449-39b007c6999b?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "beauty",
@@ -82,9 +82,6 @@ export default function CategoryStrip() {
       <div className="container">
         <div className="section-header">
           <div className="section-title-wrap">
-            <span className="section-eyebrow">
-              {language === "hi" ? "श्रेणी अनुसार खोजें" : "EXPLORE BY AISLE"}
-            </span>
             <h2 className="section-heading">
               {language === "hi"
                 ? "8 मुख्य श्रेणियां देखें"
@@ -98,10 +95,11 @@ export default function CategoryStrip() {
           </div>
           <a
             href="#catalog"
-            className="view-all-link"
+            className="view-all-link inline-flex items-center gap-1.5 font-bold text-[#073B2A] hover:text-[#C9A24A] transition-colors"
             onClick={() => setActiveCategory("all")}
           >
-            {language === "hi" ? "सभी किस्में देखें &rarr;" : "View All Varieties &rarr;"}
+            <span>{language === "hi" ? "सभी किस्में देखें" : "View All Varieties"}</span>
+            <span aria-hidden="true">→</span>
           </a>
         </div>
 
@@ -135,7 +133,7 @@ export default function CategoryStrip() {
                   onClick={(e) => e.stopPropagation()}
                   className="text-[11px] font-extrabold text-[#9A7B38] hover:underline inline-flex items-center gap-1"
                 >
-                  <span>Explore Hub &rarr;</span>
+                  <span>Explore Hub →</span>
                 </Link>
               </div>
             </div>

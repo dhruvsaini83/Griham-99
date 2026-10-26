@@ -23,38 +23,45 @@ export default function PriceStrip() {
   ];
 
   return (
-    <section className="price-strip-section overflow-hidden max-w-full" id="price-strip">
-      <div className="container">
-        <div className="price-strip-header">
-          <h2 className="price-strip-title">
-            {language === "hi"
-              ? "शानदार खोजें — सिर्फ ₹49 से शुरू"
-              : "Great Finds Start at ₹49"}
-          </h2>
-          <p className="price-strip-subtitle">
-            {language === "hi"
-              ? "अपने पसंदीदा बजट के अनुसार तुरंत उत्पाद चुनें"
-              : "Filter instantly by your preferred budget"}
-          </p>
+    <section className="bg-gradient-to-b from-[#073B2A]/5 via-white to-white py-6 border-b border-[#E7E1D5]" id="price-strip">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+          <div>
+            <h2 className="text-lg sm:text-xl font-black text-[#073B2A] tracking-tight">
+              {language === "hi"
+                ? "बजट के अनुसार खोजें — शुरुआत सिर्फ ₹49 से"
+                : "Shop by Budget — Starting at Just ₹49"}
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-600">
+              {language === "hi"
+                ? "पारदर्शी मूल्य निर्धारण, कोई छिपे हुए शुल्क नहीं"
+                : "Direct manufacturer pricing with no hidden charges"}
+            </p>
+          </div>
         </div>
 
-        <div className="price-tier-pills flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-2 sm:gap-3 pb-2 -mx-3 px-3 sm:mx-0 sm:px-0">
+        <div className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-2.5 sm:gap-3 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           {TIERS.map((tier, idx) => (
             <motion.button
               key={idx}
-              whileTap={{ scale: 0.96 }}
-              className={`price-pill-btn shrink-0 snap-start min-h-[44px] transition-colors duration-200 relative ${tier.match ? "active" : ""}`}
+              whileTap={{ scale: 0.97 }}
               onClick={() => handlePriceClick(tier.limit, tier.cat)}
+              className={`shrink-0 snap-start min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all ${
+                tier.match
+                  ? "bg-[#073B2A] text-white border-[#073B2A] shadow-md"
+                  : "bg-white text-stone-700 border-stone-200 hover:border-[#C9A24A] hover:bg-stone-50"
+              }`}
             >
-              {tier.match && (
-                <motion.div
-                  layoutId="active-price-tier-indicator"
-                  className="active-pill-indicator absolute inset-0 bg-[#073B2A] rounded-full -z-10 shadow-md"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">{tier.label}</span>
-              <span className="pill-tag relative z-10">{tier.tag}</span>
+              <span>{tier.label}</span>
+              <span
+                className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                  tier.match
+                    ? "bg-[#C9A24A] text-[#073B2A]"
+                    : "bg-stone-100 text-stone-500"
+                }`}
+              >
+                {tier.tag}
+              </span>
             </motion.button>
           ))}
         </div>

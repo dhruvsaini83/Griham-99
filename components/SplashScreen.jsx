@@ -94,7 +94,7 @@ export default function SplashScreen({ minDuration = 2000 }) {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-2xl sm:text-3xl font-royal tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FDE6A6] via-[#D4AF37] to-[#F4D068] font-black uppercase mb-1 drop-shadow-sm"
+              className="text-2xl sm:text-3xl font-royal tracking-widest text-[#E6C875] font-black uppercase mb-1 drop-shadow-sm"
             >
               GRIHAM 99+
             </motion.div>

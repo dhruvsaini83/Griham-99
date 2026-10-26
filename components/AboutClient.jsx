@@ -153,7 +153,7 @@ function AboutPageContent() {
               <span className="text-[#FCE59F] block mb-2 font-serif">
                 गृहम 99+ Store Jaipur
               </span>
-              <span className="bg-gradient-to-r from-white via-[#FCE59F] to-white bg-clip-text text-transparent">
+              <span className="text-white">
                 Apka Apna Ghar Ka 99 Store
               </span>
             </motion.h1>
@@ -586,7 +586,7 @@ function AboutPageContent() {
                           rel="noopener noreferrer"
                           className="min-h-[44px] px-5 py-2.5 rounded-xl bg-[#C9A24A] text-[#073B2A] font-extrabold text-sm inline-flex items-center gap-2 shadow"
                         >
-                          <span>📍 Open in Google Maps App &rarr;</span>
+                          <span>📍 Open in Google Maps App →</span>
                         </a>
                       </div>
                     </div>
@@ -604,7 +604,7 @@ function AboutPageContent() {
                       rel="noopener noreferrer"
                       className="text-[11px] text-[#C9A24A] hover:underline font-extrabold ml-2"
                     >
-                      Enlarge Map &rarr;
+                      Enlarge Map →
                     </a>
                   </div>
                 </div>
@@ -625,7 +625,7 @@ function AboutPageContent() {
                     rel="noopener noreferrer"
                     className="text-[#E6C875] hover:text-white font-bold underline shrink-0"
                   >
-                    Navigate on Phone &rarr;
+                    Navigate on Phone →
                   </a>
                 </div>
               </motion.div>

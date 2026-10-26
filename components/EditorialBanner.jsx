@@ -55,7 +55,7 @@ export default function EditorialBanner() {
                   ? "₹49 और ₹99 के उत्पाद देखें"
                   : "Explore ₹49 & ₹99 Finds"}
               </span>
-              <span>&rarr;</span>
+              <span>→</span>
             </motion.button>
           </div>
 

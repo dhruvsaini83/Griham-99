@@ -203,7 +203,7 @@ export default function Header() {
             </span>
           </div>
 
-          <div className="announcement-tools">
+          <div className="announcement-tools hidden sm:flex items-center gap-3 text-xs shrink-0">
             <Link
               href="/about#store-location"
               className="hidden lg:flex items-center gap-1 text-xs text-[#E6C875] hover:text-white transition-colors font-semibold mr-2"
@@ -822,7 +822,7 @@ export default function Header() {
                           <span>{c.icon}</span>
                           <span>{c.label}</span>
                         </span>
-                        <span className="text-[10px] opacity-70">&rarr;</span>
+                        <span className="text-[10px] opacity-70">→</span>
                       </button>
                     ))}
                   </div>

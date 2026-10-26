@@ -90,7 +90,7 @@ export default function HomePage() {
       <link
         rel="preload"
         as="image"
-        href="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&w=1200&q=75"
+        href="https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=1200&q=80"
         fetchPriority="high"
       />
       <script

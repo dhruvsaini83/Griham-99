@@ -206,9 +206,9 @@ export default function AdminLoginPage() {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="text-[#FF6B00] hover:underline font-medium"
+              className="text-[#073B2A] hover:text-[#C9A24A] hover:underline font-semibold"
             >
-              Customer Store &rarr;
+              Customer Store →
             </a>
           </div>
         </div>

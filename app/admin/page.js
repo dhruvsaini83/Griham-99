@@ -315,9 +315,9 @@ export default function AdminDashboardPage() {
               </div>
               <Link
                 href="/admin/products"
-                className="text-xs font-bold text-[#FF6B00] hover:underline"
+                className="text-xs font-bold text-[#073B2A] hover:text-[#C9A24A] hover:underline"
               >
-                Sabhi Dekhein &rarr;
+                Sabhi Dekhein →
               </Link>
             </div>
 

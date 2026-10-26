@@ -407,7 +407,7 @@ export default function CheckoutModal() {
               className="btn-gold-primary min-h-[44px] w-full mt-3 font-bold flex items-center justify-center"
               onClick={handleStep1Next}
             >
-              <span>Continue to Delivery Address &rarr;</span>
+              <span>Continue to Delivery Address →</span>
             </button>
             </motion.div>
           )}
@@ -582,7 +582,7 @@ export default function CheckoutModal() {
                 className="btn-gold-primary min-h-[44px] flex-1 font-bold flex items-center justify-center"
                 onClick={handleStep2Next}
               >
-                <span>Continue to Payment &rarr;</span>
+                <span>Continue to Payment →</span>
               </button>
             </div>
             </motion.div>
@@ -944,7 +944,7 @@ export default function CheckoutModal() {
                   style={{ color: "var(--color-forest)" }}
                   onClick={handleClose}
                 >
-                  <span>Continue Shopping &rarr;</span>
+                  <span>Continue Shopping →</span>
                 </button>
               </div>
             </motion.div>

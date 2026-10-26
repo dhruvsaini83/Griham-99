@@ -213,7 +213,7 @@ export default function Footer() {
                   aria-label="Get Directions to Griham 99 Store"
                 >
                   <span>🧭</span>
-                  <span>{language === "hi" ? "रास्ता देखें" : "Directions"} &rarr;</span>
+                  <span>{language === "hi" ? "रास्ता देखें" : "Directions"} →</span>
                 </a>
                 <Link
                   href="/about#store-location"

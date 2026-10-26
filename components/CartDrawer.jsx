@@ -205,7 +205,7 @@ export default function CartDrawer() {
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
-                    {language === "hi" ? "उत्पाद देखें &rarr;" : "Explore Finds &rarr;"}
+                    {language === "hi" ? "उत्पाद देखें →" : "Explore Finds →"}
                   </motion.button>
                 </div>
               ) : (
@@ -419,7 +419,7 @@ export default function CartDrawer() {
                     color: "#FFFFFF",
                   }}
                 >
-                  <span>Add Delivery Address First &rarr;</span>
+                  <span>Add Delivery Address First →</span>
                 </motion.button>
 
                 <div

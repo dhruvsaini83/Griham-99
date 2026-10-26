@@ -99,29 +99,30 @@ const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }
             alt={`${product.name} at ${product.price || 99} rupees - Griham 99+`}
             width={400}
             height={400}
-            loading="lazy"
+            loading={index < 4 ? "eager" : "lazy"}
             decoding="async"
-            fetchPriority="low"
+            fetchPriority={index < 4 ? "high" : "low"}
             className="product-card-img w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&w=400&q=75";
+              e.currentTarget.src = "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=400&q=75";
             }}
           />
         </Link>
 
         <div className="product-badge-group absolute top-2.5 left-2.5 flex flex-col gap-1 z-10 pointer-events-none">
-          {product.price <= 99 && (
-            <span className="badge-price-starter text-[10px] font-extrabold px-2 py-0.5 rounded shadow">UNDER ₹99</span>
-          )}
-          {discountPct >= 35 && (
-            <span className="badge-discount text-[10px] font-extrabold px-2 py-0.5 rounded shadow">
+          {discountPct >= 30 ? (
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-[#C83214] text-white shadow-sm tracking-wide">
               {discountPct}% OFF
             </span>
-          )}
+          ) : product.price <= 99 ? (
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-[#9B7829] text-white shadow-sm tracking-wide">
+              UNDER ₹99
+            </span>
+          ) : null}
           {product.bestseller && (
-            <span className="badge-tag-custom text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-              BESTSELLER
+            <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-[#073B2A] text-[#FDE6A6] shadow-sm tracking-wide">
+              ★ BESTSELLER
             </span>
           )}
         </div>
@@ -130,7 +131,7 @@ const ProductCard = React.forwardRef(function ProductCard({ product, index = 0 }
           <motion.button
             whileTap={{ scale: 0.85 }}
             animate={heartAnim ? { scale: [1, 1.25, 1] } : { scale: 1 }}
-            transition={{ duration: 0.35, ease: [0.175, 0.885, 0.32, 1.275] }}
+            transition={{ duration: 0.35, ease: luxuryEase }}
             className={`card-icon-btn min-h-[44px] min-w-[44px] rounded-full flex items-center justify-center transition-all ${
               inWishlist ? "in-wishlist text-[#C83214] bg-[#FEEBE8]" : "bg-white/90 text-stone-700 hover:bg-white"
             } shadow-md`}

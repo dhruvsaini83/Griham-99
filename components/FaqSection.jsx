@@ -17,13 +17,10 @@ export default function FaqSection() {
     <section className="py-12 sm:py-16 bg-[#F4EFE6]/60 border-t border-[#E7E1D5]" id="faq">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-10">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest bg-[#C9A24A]/20 text-[#073B2A] border border-[#C9A24A]/30 mb-3">
-            {language === "hi" ? "अक्सर पूछे जाने वाले सवाल" : "Got Questions? We Got Answers"}
-          </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#073B2A] tracking-tight">
             {language === "hi"
               ? "अक्सर पूछे जाने वाले प्रश्न (FAQ)"
-              : "Frequently Asked Questions — Griham 99+"}
+              : "Frequently Asked Questions"}
           </h2>
           <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-xl mx-auto">
             {language === "hi"
@@ -46,7 +43,7 @@ export default function FaqSection() {
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-[#18201C] hover:text-[#073B2A] transition-colors focus:outline-none"
+                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-[#18201C] hover:text-[#073B2A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#073B2A]"
                   aria-expanded={isOpen}
                 >
                   <span className="text-base sm:text-lg font-bold leading-snug flex items-center gap-2.5">
@@ -54,11 +51,22 @@ export default function FaqSection() {
                     {question}
                   </span>
                   <span
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-stone-200 text-sm font-black transition-transform duration-300 ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-stone-200 transition-transform duration-300 ${
                       isOpen ? "rotate-180 bg-[#073B2A] text-white border-[#073B2A]" : "bg-stone-50 text-stone-600"
                     }`}
                   >
-                    ▼
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
                   </span>
                 </button>
 

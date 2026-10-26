@@ -70,9 +70,6 @@ export default function ProductGrid() {
       <div className="container">
         <div className="section-header">
           <div className="section-title-wrap">
-            <span className="section-eyebrow">
-              {language === "hi" ? "हमारी खास गैलरी" : "OUR CURATED AISLE"}
-            </span>
             <h2 className="section-heading">
               {language === "hi"
                 ? "किफायती व उपयोगी घरेलू वस्तुएं"

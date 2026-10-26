@@ -333,7 +333,7 @@ function ProductDetailContent({ product, relatedProducts = [] }) {
                 href={`/category/${product.category.toLowerCase()}`}
                 className="text-xs sm:text-sm font-extrabold text-[#9A7B38] hover:underline"
               >
-                View All {product.category} &rarr;
+                View All {product.category} →
               </Link>
             </div>
 

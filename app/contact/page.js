@@ -180,9 +180,9 @@ function ContactContent() {
                     setSubmitted(false);
                     setFormData({ name: "", phone: "", email: "", message: "" });
                   }}
-                  className="text-xs font-bold text-[#073B2A] underline hover:text-[#FF6B00]"
+                  className="text-xs font-bold text-[#073B2A] underline hover:text-[#C9A24A]"
                 >
-                  Send another message &rarr;
+                  Send another message →
                 </button>
               </div>
             ) : (
@@ -251,7 +251,7 @@ function ContactContent() {
                   {isSubmitting ? (
                     <span>Sending message...</span>
                   ) : (
-                    <span>Submit Message &rarr;</span>
+                    <span>Submit Message →</span>
                   )}
                 </button>
               </form>

@@ -128,7 +128,7 @@ export default function WishlistDrawer() {
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
-                    {language === "hi" ? "उत्पाद देखें &rarr;" : "Explore Finds &rarr;"}
+                    {language === "hi" ? "उत्पाद देखें →" : "Explore Finds →"}
                   </motion.button>
                 </div>
               ) : (

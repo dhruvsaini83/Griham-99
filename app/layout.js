@@ -16,7 +16,7 @@ const playfair = Playfair_Display({
 });
 
 export const viewport = {
-  themeColor: "#FF6B00",
+  themeColor: "#073B2A",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -167,7 +167,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
         <link rel="alternate icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/assets/logo.svg" />
-        <meta name="theme-color" content="#FF6B00" />
+        <meta name="theme-color" content="#073B2A" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(storeJsonLd) }}
